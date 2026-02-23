@@ -15,9 +15,16 @@ export function LandingFooter() {
     <footer className="bg-background border-t-[1px] border-sidebar-border">
       <div className="container flex flex-wrap justify-between gap-6 py-6 md:px-6">
         <section className="max-w-prose w-full mb-3 space-y-1.5 md:w-auto">
-          <Link href="/" className="w-fit flex text-foreground font-black mb-6">
-            <ChartCandlestick className="h-6 w-6 me-2" />
-            <span>Open Algotrade</span>
+          <Link
+            href="/"
+            className="w-fit flex items-center text-foreground font-black mb-6"
+          >
+            <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25">
+              <ChartCandlestick className="h-4 w-4 text-white" />
+            </span>
+            <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              Open Algotrade
+            </span>
           </Link>
           <h3 className="font-semibold leading-none tracking-tight">
             Subscribe to our newsletter
@@ -69,16 +76,28 @@ export function LandingFooter() {
             .
           </p>
           <p className="text-xs text-muted-foreground md:text-sm">
-            Designed & Developed by{" "}
+            Developed by{" "}
             <a
-              href="https://github.com/Qualiora"
+              href="https://github.com/jdgafx"
               target="_blank"
               rel="noopener noreferrer"
               className={cn(buttonVariants({ variant: "link" }), "inline p-0")}
             >
-              Qualiora
+              Chris Gentile
             </a>
-            .
+            {" / "}
+            <a
+              href="https://github.com/jdgafx"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "link" }), "inline p-0")}
+            >
+              CGDarkstardev1
+            </a>
+            {" / "}
+            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent font-medium">
+              NewDawn AI
+            </span>
           </p>
         </div>
       </div>

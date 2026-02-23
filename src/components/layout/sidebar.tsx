@@ -128,12 +128,19 @@ export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
       <SidebarHeader>
         <Link
           href={ensureLocalizedPathname("/", locale)}
-          className="w-fit flex items-center text-foreground font-black p-2 pb-0 mb-2"
+          className="w-fit flex items-center text-foreground font-black p-2 pb-0 mb-1"
           onClick={() => isMobile && setOpenMobile(!openMobile)}
         >
-          <ChartCandlestick className="h-6 w-6 me-2" />
-          <span>Open Algotrade</span>
+          <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25">
+            <ChartCandlestick className="h-4 w-4 text-white" />
+          </span>
+          <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            Open Algotrade
+          </span>
         </Link>
+        <p className="px-2 text-[9px] leading-tight text-muted-foreground/60">
+          by Chris Gentile / NewDawn AI
+        </p>
       </SidebarHeader>
       <ScrollArea>
         <SidebarContent className="gap-0">

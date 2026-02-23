@@ -35,10 +35,14 @@ export function LandingHeader({ dictionary }: { dictionary: DictionaryType }) {
         <LandingSidebar fullPathname={fullPathname} />
         <Link
           href="/"
-          className="place-self-center w-fit flex text-foreground font-black hover:text-primary/90 lg:place-self-auto"
+          className="place-self-center w-fit flex items-center text-foreground font-black hover:text-primary/90 lg:place-self-auto"
         >
-          <ChartCandlestick className="h-6 w-6 me-2" />
-          <span>Open Algotrade</span>
+          <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25">
+            <ChartCandlestick className="h-4 w-4 text-white" />
+          </span>
+          <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            Open Algotrade
+          </span>
         </Link>
         <nav className="hidden lg:block">
           <ul className="place-self-center flex gap-2">
