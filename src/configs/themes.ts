@@ -4,9 +4,9 @@ export const themes = {
   zinc: {
     label: "Zinc",
     activeColor: {
-      light: "240 5.9% 10%",
-      dark: "240 5.2% 33.9%",
-      foreground: "0 0% 98%",
+      light: "217 91% 50%",
+      dark: "217 91% 60%",
+      foreground: "0 0% 100%",
     },
   },
   slate: {
@@ -76,9 +76,9 @@ export const themes = {
   blue: {
     label: "Blue",
     activeColor: {
-      light: "221.2 83.2% 53.3%",
-      dark: "217.2 91.2% 59.8%",
-      foreground: "210 40% 98%",
+      light: "217 91% 50%",
+      dark: "217 91% 60%",
+      foreground: "0 0% 100%",
     },
   },
   yellow: {

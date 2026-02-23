@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 
-import type { StrategyCategory, StrategyDefinition } from "../_data/strategy"
+import type {
+  ProfitHorizon,
+  StrategyCategory,
+  StrategyDefinition,
+} from "../_data/strategy"
 
 import { api } from "@/lib/api-client"
 
@@ -90,6 +94,53 @@ const RISK_STYLES = {
   },
 } as const
 
+const HORIZON_STYLES: Record<
+  ProfitHorizon,
+  {
+    label: string
+    sublabel: string
+    bgColor: string
+    textColor: string
+    borderColor: string
+  }
+> = {
+  "quick-gains": {
+    label: "QUICK GAINS",
+    sublabel: "Minutes to Hours",
+    bgColor: "bg-red-500/15",
+    textColor: "text-red-500",
+    borderColor: "border-red-500/30",
+  },
+  "short-term": {
+    label: "SHORT TERM",
+    sublabel: "Hours to Days",
+    bgColor: "bg-amber-500/15",
+    textColor: "text-amber-500",
+    borderColor: "border-amber-500/30",
+  },
+  "medium-term": {
+    label: "MEDIUM TERM",
+    sublabel: "Days to Weeks",
+    bgColor: "bg-blue-500/15",
+    textColor: "text-blue-500",
+    borderColor: "border-blue-500/30",
+  },
+  "long-term": {
+    label: "LONG TERM",
+    sublabel: "Weeks to Months",
+    bgColor: "bg-indigo-500/15",
+    textColor: "text-indigo-500",
+    borderColor: "border-indigo-500/30",
+  },
+  "steady-income": {
+    label: "STEADY INCOME",
+    sublabel: "Ongoing Returns",
+    bgColor: "bg-emerald-500/15",
+    textColor: "text-emerald-500",
+    borderColor: "border-emerald-500/30",
+  },
+}
+
 interface StrategyCardProps {
   strategy: StrategyDefinition
   isRunning: boolean
@@ -107,6 +158,7 @@ export function StrategyCard({
 
   const cat = CATEGORY_STYLES[strategy.category] ?? CATEGORY_STYLES.statistical
   const risk = RISK_STYLES[strategy.riskLevel]
+  const horizon = HORIZON_STYLES[strategy.profitHorizon]
   const paramEntries = Object.entries(strategy.params)
 
   async function handleStart() {
@@ -199,12 +251,64 @@ export function StrategyCard({
             {strategy.name}
           </h3>
           <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-            {strategy.description}
+            {strategy.plainDescription}
           </p>
         </div>
       </CardHeader>
 
       <CardContent className="flex flex-1 flex-col gap-4">
+        {/* Profit Horizon + Return Speed - BIG & BOLD */}
+        <div
+          className={`rounded-lg border p-3 ${horizon.bgColor} ${horizon.borderColor}`}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <p
+                className={`text-lg font-extrabold tracking-tight ${horizon.textColor}`}
+              >
+                {horizon.label}
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                {horizon.sublabel}
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Profit
+                </span>
+                <div className="flex gap-0.5">
+                  {([1, 2, 3, 4, 5] as const).map((n) => (
+                    <div
+                      key={n}
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        n <= strategy.maxProfitRating
+                          ? "bg-yellow-500"
+                          : "bg-muted"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="mt-1 flex items-center gap-1">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Speed
+                </span>
+                <div className="flex gap-0.5">
+                  {([1, 2, 3, 4, 5] as const).map((n) => (
+                    <div
+                      key={n}
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        n <= strategy.returnSpeed ? "bg-cyan-500" : "bg-muted"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="rounded-lg border bg-muted/20 p-3">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
@@ -231,20 +335,22 @@ export function StrategyCard({
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">Risk</span>
-          <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-between rounded-md border bg-muted/10 px-3 py-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Risk Level
+          </span>
+          <div className="flex items-center gap-2">
             <div className="flex gap-0.5">
               {([1, 2, 3] as const).map((bar) => (
                 <div
                   key={bar}
-                  className={`h-3 w-1.5 rounded-sm ${
+                  className={`h-4 w-2 rounded-sm ${
                     bar <= risk.bars ? risk.barColor : "bg-muted"
                   }`}
                 />
               ))}
             </div>
-            <span className={`text-xs font-semibold ${risk.textColor}`}>
+            <span className={`text-sm font-bold ${risk.textColor}`}>
               {risk.label}
             </span>
           </div>

@@ -173,7 +173,34 @@ export interface VaultHistoryPoint {
   nav_per_share: number
 }
 
+export interface ApiKeyTestResult {
+  valid: boolean
+  address: string
+}
+
+export interface ApiKeySaveResult {
+  status: string
+}
+
+export interface ApiKeyStatus {
+  connected: boolean
+  address: string | null
+}
+
 export const api = {
+  // ── API Key Management ───────────────────────
+  testApiKey: (apiKey: string, apiSecret: string) =>
+    fetchAPI<ApiKeyTestResult>("/api-keys/test", {
+      method: "POST",
+      body: JSON.stringify({ api_key: apiKey, api_secret: apiSecret }),
+    }),
+  saveApiKey: (apiKey: string, apiSecret: string) =>
+    fetchAPI<ApiKeySaveResult>("/api-keys/save", {
+      method: "POST",
+      body: JSON.stringify({ api_key: apiKey, api_secret: apiSecret }),
+    }),
+  getApiKeyStatus: () => fetchAPI<ApiKeyStatus>("/api-keys/status"),
+
   // ── Vault ──────────────────────────────────
   getVaultStatus: () => fetchAPI<VaultStatus>("/vault/status"),
 

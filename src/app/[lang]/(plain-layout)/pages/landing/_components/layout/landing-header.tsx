@@ -67,10 +67,19 @@ export function LandingHeader({ dictionary }: { dictionary: DictionaryType }) {
           <ModeDropdown dictionary={dictionary} />
           <LanguageDropdown dictionary={dictionary} />
           <Link
+            href={ensureLocalizedPathname("/sign-in", locale)}
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "hidden lg:flex"
+            )}
+          >
+            <LogIn className="me-2 h-4 w-4" />
+            <span>Sign In</span>
+          </Link>
+          <Link
             href={ensureLocalizedPathname("/register", locale)}
             className={cn(buttonVariants(), "hidden lg:flex")}
           >
-            <LogIn className="me-2 h-4 w-4" />
             <span>Register</span>
           </Link>
         </div>

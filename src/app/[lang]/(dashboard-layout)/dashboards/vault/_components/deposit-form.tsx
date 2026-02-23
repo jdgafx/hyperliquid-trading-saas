@@ -1,8 +1,14 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
+import { useParams } from "next/navigation"
+import { Loader2 } from "lucide-react"
+
+import type { LocaleType } from "@/types"
 
 import { api } from "@/lib/api-client"
+import { ensureLocalizedPathname } from "@/lib/i18n"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,33 +21,39 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: {
-        method: string
-        params?: unknown[]
-      }) => Promise<unknown>
-      on: (event: string, handler: (...args: unknown[]) => void) => void
-      removeListener: (
-        event: string,
-        handler: (...args: unknown[]) => void
-      ) => void
-    }
-  }
-}
-
 function truncateAddress(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`
 }
 
 export function DepositForm() {
+  const params = useParams()
+  const locale = params.lang as LocaleType
+
   const [amount, setAmount] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState("")
-  const [walletAddress, setWalletAddress] = useState("")
-  const [isConnecting, setIsConnecting] = useState(false)
+  const [isCheckingConnection, setIsCheckingConnection] = useState(true)
+  const [connectionStatus, setConnectionStatus] = useState<{
+    connected: boolean
+    address: string | null
+  }>({ connected: false, address: null })
+
+  const checkConnection = useCallback(async () => {
+    setIsCheckingConnection(true)
+    try {
+      const status = await api.getApiKeyStatus()
+      setConnectionStatus(status)
+    } catch {
+      setConnectionStatus({ connected: false, address: null })
+    } finally {
+      setIsCheckingConnection(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    checkConnection()
+  }, [checkConnection])
 
   function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
     setAmount(e.target.value)
@@ -49,39 +61,9 @@ export function DepositForm() {
     setSuccess("")
   }
 
-  const connectWallet = useCallback(async () => {
-    if (!window.ethereum) {
-      setError(
-        "No wallet detected. Please install MetaMask or another Web3 wallet."
-      )
-      return
-    }
-    setIsConnecting(true)
-    setError("")
-    try {
-      const accounts = (await window.ethereum.request({
-        method: "eth_requestAccounts",
-      })) as string[]
-      if (accounts.length > 0) {
-        setWalletAddress(accounts[0])
-      }
-    } catch {
-      setError("Wallet connection was rejected.")
-    } finally {
-      setIsConnecting(false)
-    }
-  }, [])
-
-  function disconnectWallet() {
-    setWalletAddress("")
-    setAmount("")
-    setError("")
-    setSuccess("")
-  }
-
   async function handleDeposit() {
-    if (!walletAddress) {
-      setError("Please connect your wallet first.")
+    if (!connectionStatus.connected) {
+      setError("Please connect your Hyperliquid account first.")
       return
     }
     const value = parseFloat(amount)
@@ -94,7 +76,7 @@ export function DepositForm() {
     try {
       const result = await api.deposit(1, value)
       setSuccess(
-        `Deposited $${value.toFixed(2)} — you now hold ${result.shares.toFixed(4)} shares`
+        `Deposited $${value.toFixed(2)} -- you now hold ${result.shares.toFixed(4)} shares`
       )
       setAmount("")
     } catch {
@@ -104,6 +86,20 @@ export function DepositForm() {
     }
   }
 
+  if (isCheckingConnection) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Deposit</CardTitle>
+          <CardDescription>Minimum deposit: $0.25 USDC</CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-8">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -111,19 +107,22 @@ export function DepositForm() {
         <CardDescription>Minimum deposit: $0.25 USDC</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {!walletAddress ? (
+        {!connectionStatus.connected ? (
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              Connect your wallet to deposit funds into the vault.
+              Connect your Hyperliquid account first to deposit funds into the
+              vault.
             </p>
-            <Button
-              onClick={connectWallet}
-              disabled={isConnecting}
-              variant="outline"
-              className="w-full"
+            <Link
+              href={ensureLocalizedPathname(
+                "/pages/account/settings/api-keys",
+                locale
+              )}
             >
-              {isConnecting ? "Connecting..." : "Connect Wallet"}
-            </Button>
+              <Button variant="outline" className="w-full">
+                Connect Hyperliquid Account
+              </Button>
+            </Link>
             {error && <p className="text-sm text-destructive">{error}</p>}
           </div>
         ) : (
@@ -131,15 +130,18 @@ export function DepositForm() {
             <div className="flex items-center justify-between rounded-md border p-3">
               <div className="space-y-0.5">
                 <p className="text-xs text-muted-foreground">
-                  Connected Wallet
+                  Hyperliquid Account
                 </p>
                 <p className="font-mono text-sm font-medium">
-                  {truncateAddress(walletAddress)}
+                  {connectionStatus.address
+                    ? truncateAddress(connectionStatus.address)
+                    : "Connected"}
                 </p>
               </div>
-              <Button onClick={disconnectWallet} variant="ghost" size="sm">
-                Disconnect
-              </Button>
+              <span className="flex items-center gap-1.5 text-xs font-medium text-green-600 dark:text-green-400">
+                <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+                Connected
+              </span>
             </div>
             <div className="space-y-2">
               <Label htmlFor="deposit-amount">Amount (USDC)</Label>

@@ -7,13 +7,17 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  EyeOff,
+  Key,
+  Loader2,
   ShieldCheck,
   User,
-  Wallet,
 } from "lucide-react"
 
 import type { LocaleType } from "@/types"
 
+import { api } from "@/lib/api-client"
 import { ensureLocalizedPathname } from "@/lib/i18n"
 import { cn, ensureRedirectPathname } from "@/lib/utils"
 
@@ -137,7 +141,7 @@ const STRATEGY_TIERS: {
 const STEPS = [
   { number: 1, label: "Account", icon: User },
   { number: 2, label: "Profile", icon: ShieldCheck },
-  { number: 3, label: "Connect", icon: Wallet },
+  { number: 3, label: "Connect", icon: Key },
 ] as const
 
 function StepIndicator({ currentStep }: { currentStep: number }) {
@@ -211,7 +215,11 @@ interface Step2State {
 }
 
 interface Step3State {
-  walletAddress: string
+  hlApiKey: string
+  hlApiSecret: string
+  showSecret: boolean
+  testStatus: "idle" | "testing" | "valid" | "invalid"
+  testAddress: string
   depositAmount: string
 }
 
@@ -230,7 +238,6 @@ export function RegisterForm() {
   // Current step
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isConnectingWallet, setIsConnectingWallet] = useState(false)
 
   // Step 1 state
   const [step1, setStep1] = useState<Step1State>({
@@ -256,7 +263,11 @@ export function RegisterForm() {
 
   // Step 3 state
   const [step3, setStep3] = useState<Step3State>({
-    walletAddress: "",
+    hlApiKey: "",
+    hlApiSecret: "",
+    showSecret: false,
+    testStatus: "idle",
+    testAddress: "",
     depositAmount: "",
   })
   const [step3Errors, setStep3Errors] = useState<
@@ -352,43 +363,53 @@ export function RegisterForm() {
   }, [step])
 
   // ---------------------------------------------------------------------------
-  // Wallet connection
+  // Hyperliquid API key test
   // ---------------------------------------------------------------------------
 
-  const connectWallet = useCallback(async () => {
-    if (typeof window === "undefined") return
-
-    const ethereum = (
-      window as unknown as {
-        ethereum?: { request: (args: { method: string }) => Promise<string[]> }
-      }
-    ).ethereum
-    if (!ethereum) {
+  const testHlConnection = useCallback(async () => {
+    if (!step3.hlApiKey.trim() || !step3.hlApiSecret.trim()) {
       toast({
         variant: "destructive",
-        title: "MetaMask not found",
-        description: "Please install MetaMask to connect your wallet.",
+        title: "Missing credentials",
+        description: "Both API Key and API Secret are required.",
       })
       return
     }
 
-    setIsConnectingWallet(true)
+    setStep3((prev) => ({ ...prev, testStatus: "testing" }))
     try {
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" })
-      if (accounts && accounts.length > 0) {
-        setStep3((prev) => ({ ...prev, walletAddress: accounts[0] }))
-        toast({ title: "Wallet connected" })
+      const result = await api.testApiKey(
+        step3.hlApiKey.trim(),
+        step3.hlApiSecret.trim()
+      )
+      if (result.valid) {
+        setStep3((prev) => ({
+          ...prev,
+          testStatus: "valid",
+          testAddress: result.address,
+        }))
+        toast({ title: "Connection verified" })
+      } else {
+        setStep3((prev) => ({
+          ...prev,
+          testStatus: "invalid",
+          testAddress: "",
+        }))
+        toast({
+          variant: "destructive",
+          title: "Invalid credentials",
+          description: "Please check your API key and secret.",
+        })
       }
     } catch {
+      setStep3((prev) => ({ ...prev, testStatus: "invalid", testAddress: "" }))
       toast({
         variant: "destructive",
-        title: "Connection failed",
-        description: "Could not connect to wallet. Please try again.",
+        title: "Connection test failed",
+        description: "Could not verify credentials. Please try again.",
       })
-    } finally {
-      setIsConnectingWallet(false)
     }
-  }, [])
+  }, [step3.hlApiKey, step3.hlApiSecret])
 
   // ---------------------------------------------------------------------------
   // Submit
@@ -429,7 +450,8 @@ export function RegisterForm() {
               experienceLevel: step2.experienceLevel,
               riskTolerance: step2.riskTolerance,
               preferredStrategies: step2.preferredStrategies,
-              walletAddress: step3.walletAddress || undefined,
+              hlApiKey: step3.hlApiKey.trim() || undefined,
+              hlApiSecret: step3.hlApiSecret.trim() || undefined,
               initialDeposit: step3.depositAmount
                 ? parseFloat(step3.depositAmount)
                 : undefined,
@@ -818,44 +840,132 @@ export function RegisterForm() {
       )}
 
       {/* ----------------------------------------------------------------- */}
-      {/* Step 3: Connect & Fund                                            */}
+      {/* Step 3: Connect Hyperliquid                                       */}
       {/* ----------------------------------------------------------------- */}
       {step === 3 && (
         <div className="grid gap-4 animate-in fade-in slide-in-from-right-4 duration-300">
           <div className="grid gap-4">
-            {/* Wallet connection */}
+            {/* Hyperliquid API connection */}
             <div className="grid gap-2">
-              <Label>Wallet Connection</Label>
+              <Label>Connect Hyperliquid</Label>
               <p className="text-xs text-muted-foreground">
-                Connect your MetaMask wallet to deposit USDC and start trading.
+                Enter your Hyperliquid API credentials to start trading. All
+                trades are executed securely through our backend.
               </p>
 
-              {step3.walletAddress ? (
+              {step3.testStatus === "valid" ? (
                 <div className="flex items-center gap-2 rounded-md border border-primary/50 bg-primary/5 px-3 py-2.5">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary">
                     <Check className="h-3.5 w-3.5 text-primary-foreground" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-medium text-primary">
-                      Connected
+                      Connection verified
                     </p>
                     <p className="truncate text-xs text-muted-foreground font-mono">
-                      {step3.walletAddress}
+                      {step3.testAddress}
                     </p>
                   </div>
                 </div>
               ) : (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full justify-center gap-2"
-                  disabled={isConnectingWallet}
-                  onClick={connectWallet}
-                >
-                  <Wallet className="h-4 w-4" />
-                  {isConnectingWallet ? "Connecting..." : "Connect MetaMask"}
-                </Button>
+                <>
+                  {/* API Key */}
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="hl-api-key-reg">
+                      API Key (Wallet Address)
+                    </Label>
+                    <Input
+                      id="hl-api-key-reg"
+                      type="text"
+                      placeholder="0x..."
+                      value={step3.hlApiKey}
+                      onChange={(e) => {
+                        setStep3((prev) => ({
+                          ...prev,
+                          hlApiKey: e.target.value,
+                          testStatus: "idle",
+                        }))
+                      }}
+                    />
+                  </div>
+
+                  {/* API Secret */}
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="hl-api-secret-reg">
+                      API Secret (Private Key)
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="hl-api-secret-reg"
+                        type={step3.showSecret ? "text" : "password"}
+                        placeholder="Your private key"
+                        className="pr-10"
+                        value={step3.hlApiSecret}
+                        onChange={(e) => {
+                          setStep3((prev) => ({
+                            ...prev,
+                            hlApiSecret: e.target.value,
+                            testStatus: "idle",
+                          }))
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        onClick={() =>
+                          setStep3((prev) => ({
+                            ...prev,
+                            showSecret: !prev.showSecret,
+                          }))
+                        }
+                        tabIndex={-1}
+                      >
+                        {step3.showSecret ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {step3.testStatus === "invalid" && (
+                    <p className="text-xs text-destructive">
+                      Invalid credentials. Please check and try again.
+                    </p>
+                  )}
+
+                  {/* Test Connection button */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-center gap-2"
+                    disabled={
+                      step3.testStatus === "testing" ||
+                      !step3.hlApiKey ||
+                      !step3.hlApiSecret
+                    }
+                    onClick={testHlConnection}
+                  >
+                    {step3.testStatus === "testing" ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Testing...
+                      </>
+                    ) : (
+                      <>
+                        <Key className="h-4 w-4" />
+                        Test Connection
+                      </>
+                    )}
+                  </Button>
+                </>
               )}
+
+              <p className="text-xs text-muted-foreground">
+                Don&apos;t have API credentials? Generate them from your
+                Hyperliquid account settings.
+              </p>
             </div>
 
             {/* Deposit amount */}

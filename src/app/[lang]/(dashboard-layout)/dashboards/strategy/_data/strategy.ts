@@ -18,6 +18,13 @@ export interface ParamDef {
   options?: string[]
 }
 
+export type ProfitHorizon =
+  | "steady-income"
+  | "long-term"
+  | "medium-term"
+  | "short-term"
+  | "quick-gains"
+
 export interface StrategyDefinition {
   id: string
   name: string
@@ -26,6 +33,10 @@ export interface StrategyDefinition {
   category: StrategyCategory
   status: "live" | "coming-soon"
   riskLevel: "low" | "medium" | "high"
+  profitHorizon: ProfitHorizon
+  maxProfitRating: 1 | 2 | 3 | 4 | 5
+  returnSpeed: 1 | 2 | 3 | 4 | 5
+  plainDescription: string
   defaultSymbol: string
   defaultTimeframe: string
   params: Record<string, ParamDef>
@@ -38,57 +49,142 @@ const STRATEGY_META: Record<
     name: string
     category: StrategyCategory
     riskLevel: "low" | "medium" | "high"
+    profitHorizon: ProfitHorizon
+    maxProfitRating: 1 | 2 | 3 | 4 | 5
+    returnSpeed: 1 | 2 | 3 | 4 | 5
+    plainDescription: string
   }
 > = {
-  turtle: { name: "Turtle Trending", category: "trend", riskLevel: "medium" },
+  turtle: {
+    name: "Turtle Trending",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "long-term",
+    maxProfitRating: 3,
+    returnSpeed: 2,
+    plainDescription:
+      "Catches big price moves over weeks. Waits patiently, then rides the wave.",
+  },
   bollinger: {
     name: "Bollinger Squeeze",
     category: "trend",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Profits when price squeezes tight then explodes in one direction.",
   },
   supply_demand_zone: {
     name: "Supply/Demand Zone",
     category: "mean-reversion",
     riskLevel: "high",
+    profitHorizon: "short-term",
+    maxProfitRating: 4,
+    returnSpeed: 4,
+    plainDescription:
+      "Targets sharp bounces at key price levels. High reward, higher risk.",
   },
   vwap_bot: {
     name: "VWAP Probability",
     category: "statistical",
     riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Trades the statistical edge where big money moves the market.",
   },
-  funding_arb: { name: "Funding Arb", category: "arbitrage", riskLevel: "low" },
+  funding_arb: {
+    name: "Funding Arb",
+    category: "arbitrage",
+    riskLevel: "low",
+    profitHorizon: "steady-income",
+    maxProfitRating: 2,
+    returnSpeed: 1,
+    plainDescription:
+      "Earns steady income from funding rate differences. Low risk, consistent.",
+  },
   correlation: {
     name: "Correlation",
     category: "statistical",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Follows the leader — when ETH moves, altcoins follow. Trades the lag.",
   },
   consolidation_pop: {
     name: "Consolidation Pop",
     category: "trend",
     riskLevel: "high",
+    profitHorizon: "quick-gains",
+    maxProfitRating: 5,
+    returnSpeed: 5,
+    plainDescription:
+      "Catches explosive moves after tight ranges. Max profit, max speed.",
   },
   nadaraya_watson: {
     name: "Nadaraya-Watson",
     category: "mean-reversion",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Uses advanced math to find price turning points before they happen.",
   },
   market_maker: {
     name: "Market Maker",
     category: "market-making",
     riskLevel: "low",
+    profitHorizon: "steady-income",
+    maxProfitRating: 2,
+    returnSpeed: 1,
+    plainDescription:
+      "Earns the spread like a mini exchange. Small, steady, consistent gains.",
   },
   mean_reversion: {
     name: "Mean Reversion",
     category: "mean-reversion",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Profits when price stretches too far and snaps back like a rubber band.",
   },
-  sma_crossover: { name: "SMA Crossover", category: "trend", riskLevel: "low" },
+  sma_crossover: {
+    name: "SMA Crossover",
+    category: "trend",
+    riskLevel: "low",
+    profitHorizon: "long-term",
+    maxProfitRating: 2,
+    returnSpeed: 2,
+    plainDescription:
+      "Simple, proven moving average signals. Great for beginners, steady returns.",
+  },
   rsi: {
     name: "RSI Reversal",
     category: "mean-reversion",
     riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Buys the dip when everyone else is panic selling. Classic bounce play.",
   },
-  vwma: { name: "VWMA Alignment", category: "trend", riskLevel: "medium" },
+  vwma: {
+    name: "VWMA Alignment",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "long-term",
+    maxProfitRating: 3,
+    returnSpeed: 2,
+    plainDescription:
+      "Rides volume-confirmed trend waves. Slower but more reliable signals.",
+  },
 }
 
 /**
@@ -103,6 +199,10 @@ export function toStrategyDefinition(
       .replace(/\b\w/g, (c) => c.toUpperCase()),
     category: "statistical" as StrategyCategory,
     riskLevel: "medium" as const,
+    profitHorizon: "medium-term" as ProfitHorizon,
+    maxProfitRating: 3 as const,
+    returnSpeed: 3 as const,
+    plainDescription: info.description,
   }
 
   const tier = (info.tier?.toUpperCase() ?? "C") as StrategyTier
@@ -133,6 +233,10 @@ export function toStrategyDefinition(
     category: meta.category,
     status: "live",
     riskLevel: meta.riskLevel,
+    profitHorizon: meta.profitHorizon,
+    maxProfitRating: meta.maxProfitRating,
+    returnSpeed: meta.returnSpeed,
+    plainDescription: meta.plainDescription,
     defaultSymbol: info.default_symbol,
     defaultTimeframe: info.default_timeframe,
     params,
@@ -151,6 +255,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "trend",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "long-term",
+    maxProfitRating: 3,
+    returnSpeed: 2,
+    plainDescription:
+      "Catches big price moves over weeks. Waits patiently, then rides the wave.",
     defaultSymbol: "BTC",
     defaultTimeframe: "1h",
     description: "55-bar breakout with ATR trailing stops and take profit",
@@ -194,6 +303,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "trend",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Profits when price squeezes tight then explodes in one direction.",
     defaultSymbol: "BTC",
     defaultTimeframe: "1h",
     description: "Bollinger Band squeeze breakout with band-width triggers",
@@ -230,6 +344,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "mean-reversion",
     status: "live",
     riskLevel: "high",
+    profitHorizon: "short-term",
+    maxProfitRating: 4,
+    returnSpeed: 4,
+    plainDescription:
+      "Targets sharp bounces at key price levels. High reward, higher risk.",
     defaultSymbol: "BTC",
     defaultTimeframe: "4h",
     description: "Supply/Demand zone detection with reversal entries",
@@ -258,6 +377,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "statistical",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Trades the statistical edge where big money moves the market.",
     defaultSymbol: "BTC",
     defaultTimeframe: "15m",
     description: "VWAP-based probability bias trading (70/30 above/below)",
@@ -287,6 +411,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "arbitrage",
     status: "live",
     riskLevel: "low",
+    profitHorizon: "steady-income",
+    maxProfitRating: 2,
+    returnSpeed: 1,
+    plainDescription:
+      "Earns steady income from funding rate differences. Low risk, consistent.",
     defaultSymbol: "BTC",
     defaultTimeframe: "1h",
     description: "Funding rate arbitrage between correlated assets (BTC/ETH)",
@@ -318,6 +447,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "statistical",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Follows the leader — when ETH moves, altcoins follow. Trades the lag.",
     defaultSymbol: "SOL",
     defaultTimeframe: "15m",
     description: "Leader/follower correlation trading (ETH leads altcoins)",
@@ -347,6 +481,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "trend",
     status: "live",
     riskLevel: "high",
+    profitHorizon: "quick-gains",
+    maxProfitRating: 5,
+    returnSpeed: 5,
+    plainDescription:
+      "Catches explosive moves after tight ranges. Max profit, max speed.",
     defaultSymbol: "BTC",
     defaultTimeframe: "15m",
     description: "Consolidation detection via ATR deviance, range breakout",
@@ -391,6 +530,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "mean-reversion",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Uses advanced math to find price turning points before they happen.",
     defaultSymbol: "BTC",
     defaultTimeframe: "15m",
     description: "Kernel regression envelope + Stochastic RSI signals",
@@ -426,6 +570,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "market-making",
     status: "live",
     riskLevel: "low",
+    profitHorizon: "steady-income",
+    maxProfitRating: 2,
+    returnSpeed: 1,
+    plainDescription:
+      "Earns the spread like a mini exchange. Small, steady, consistent gains.",
     defaultSymbol: "BTC",
     defaultTimeframe: "1m",
     description:
@@ -462,6 +611,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "mean-reversion",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Profits when price stretches too far and snaps back like a rubber band.",
     defaultSymbol: "ETH",
     defaultTimeframe: "15m",
     description: "Multi-timeframe SMA mean reversion with trend filter",
@@ -497,6 +651,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "trend",
     status: "live",
     riskLevel: "low",
+    profitHorizon: "long-term",
+    maxProfitRating: 2,
+    returnSpeed: 2,
+    plainDescription:
+      "Simple, proven moving average signals. Great for beginners, steady returns.",
     defaultSymbol: "BTC",
     defaultTimeframe: "1h",
     description: "SMA crossover with support/resistance levels",
@@ -524,6 +683,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "mean-reversion",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Buys the dip when everyone else is panic selling. Classic bounce play.",
     defaultSymbol: "BTC",
     defaultTimeframe: "1h",
     description: "RSI overbought/oversold reversal strategy",
@@ -558,6 +722,11 @@ export const fallbackStrategies: StrategyDefinition[] = [
     category: "trend",
     status: "live",
     riskLevel: "medium",
+    profitHorizon: "long-term",
+    maxProfitRating: 3,
+    returnSpeed: 2,
+    plainDescription:
+      "Rides volume-confirmed trend waves. Slower but more reliable signals.",
     defaultSymbol: "BTC",
     defaultTimeframe: "15m",
     description: "Volume-weighted moving average with multi-period alignment",

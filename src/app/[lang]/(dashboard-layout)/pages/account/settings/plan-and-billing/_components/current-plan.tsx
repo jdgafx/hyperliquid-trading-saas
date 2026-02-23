@@ -37,7 +37,7 @@ export function CurrentPlan() {
         <div className="grid gap-6">
           <div>
             <div className="flex justify-between mb-2 text-sm">
-              <p className="text-muted-foreground">Active Projects</p>
+              <p className="text-muted-foreground">Active Strategies</p>
               <p className="font-medium">
                 {currentPlanData.stats.activeProjects.value} /{" "}
                 {currentPlanData.stats.activeProjects.max}
@@ -50,7 +50,7 @@ export function CurrentPlan() {
           </div>
           <div>
             <div className="flex justify-between mb-2 text-sm">
-              <p className="text-muted-foreground">Team Members</p>
+              <p className="text-muted-foreground">Sub-Accounts</p>
               <p className="font-medium">
                 {currentPlanData.stats.teamMembers.value} /{" "}
                 {currentPlanData.stats.teamMembers.max}
@@ -63,7 +63,7 @@ export function CurrentPlan() {
           </div>
           <div>
             <div className="flex justify-between mb-2 text-sm">
-              <p className="text-muted-foreground">Storage Used</p>
+              <p className="text-muted-foreground">Trade Log Storage</p>
               <p className="font-medium">
                 {formatFileSize(currentPlanData.stats.storageUsed.value)} /{" "}
                 {formatFileSize(currentPlanData.stats.storageUsed.max)}

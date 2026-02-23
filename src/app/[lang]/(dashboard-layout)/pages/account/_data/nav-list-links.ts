@@ -4,6 +4,10 @@ export const linksData = [
     title: "General",
   },
   {
+    href: "/pages/account/settings/api-keys",
+    title: "API Keys",
+  },
+  {
     href: "/pages/account/settings/security",
     title: "Security",
   },

@@ -2,51 +2,51 @@ import type { CurrentPlanType } from "../types"
 
 export const currentPlanData: CurrentPlanType = {
   plan: {
-    name: "Business Pro",
+    name: "Trader Pro",
     price: "$49/month",
-    description: "Ideal for growing teams and businesses",
+    description: "Full access to all 13 algorithmic strategies",
   },
   stats: {
     activeProjects: {
-      value: 15,
-      max: 20,
-      progress: 75,
+      value: 5,
+      max: 13,
+      progress: 38,
     },
     teamMembers: {
-      value: 18,
-      max: 25,
-      progress: 72,
+      value: 1,
+      max: 5,
+      progress: 20,
     },
     storageUsed: {
-      value: 4500000000,
-      max: 10000000000,
-      progress: 45,
+      value: 250000000,
+      max: 1000000000,
+      progress: 25,
     },
   },
   activityThisMonth: [
     {
-      iconName: "Briefcase",
-      count: 32,
-      label: "New Projects",
+      iconName: "TrendingUp",
+      count: 47,
+      label: "Trades Executed",
     },
     {
-      iconName: "Users",
-      count: 128,
-      label: "New Clients",
+      iconName: "Target",
+      count: 5,
+      label: "Active Strategies",
     },
     {
-      iconName: "FileText",
-      count: 287,
-      label: "Documents Created",
+      iconName: "DollarSign",
+      count: 12,
+      label: "Winning Trades",
     },
     {
       iconName: "ChartNoAxesColumn",
-      count: 14,
-      label: "Reports Generated",
+      count: 3,
+      label: "Positions Open",
     },
   ],
   billingInfo: {
-    nextBillingDate: new Date(new Date().setDate(new Date().getDate() + 2)), // 2 days from the current date
+    nextBillingDate: new Date(new Date().setDate(new Date().getDate() + 2)),
     amountDue: 49,
   },
 }
