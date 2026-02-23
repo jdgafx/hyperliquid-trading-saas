@@ -1,6 +1,6 @@
 import createMDX from "@next/mdx"
 
-const HOME_PATHNAME = process.env.HOME_PATHNAME || "/en/pages/landing"
+const HOME_PATHNAME = process.env.HOME_PATHNAME || "/dashboards/trading"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,36 +13,15 @@ const nextConfig = {
   // See https://nextjs.org/docs/app/building-your-application/routing/redirecting#redirects-in-nextconfigjs
   async redirects() {
     return [
-      // Important:
-      // Always list more specific static paths before dynamic ones like "/:lang"
-      // to prevent Next.js from incorrectly matching static routes as dynamic parameters.
-      // For example, if "/:lang" comes before "/docs", Next.js may treat "docs" as a language.
       {
         source: "/docs",
         destination: "/docs/overview/introduction",
         permanent: true,
       },
       {
-        source: "/:lang",
-        destination: HOME_PATHNAME,
-        permanent: true,
-        has: [
-          {
-            type: "cookie",
-            key: "next-auth.session-token",
-          },
-        ],
-      },
-      {
-        source: "/:lang",
-        destination: HOME_PATHNAME,
-        permanent: true,
-        has: [
-          {
-            type: "cookie",
-            key: "__Secure-next-auth.session-token",
-          },
-        ],
+        source: "/:lang(en|ar)",
+        destination: `/:lang${HOME_PATHNAME}`,
+        permanent: false,
       },
       {
         source: "/:lang/apps/email",
