@@ -1,3 +1,4 @@
+import type { DashboardStats } from "@/lib/api-client"
 import type { Metadata } from "next"
 import type {
   ActivePosition,
@@ -29,18 +30,27 @@ export default async function TradingPage() {
   let positions: ActivePosition[] = []
   let trades: RecentTrade[] = []
   const perfData: PerformanceDataPoint[] = []
+  let dashboardStats: DashboardStats | null = null
 
   try {
-    const [vaultStatus, apiPositions, apiTrades] = await Promise.all([
+    const [vaultStatus, apiPositions, apiTrades, apiStats] = await Promise.all([
       api.getVaultStatus(),
       api.getPositions(),
       api.getTrades(10),
+      api.getDashboardStats().catch(() => null),
     ])
 
-    // Map vault status to overview card format
+    dashboardStats = apiStats
+
+    // Map vault status to overview card format, enriched with dashboard stats
+    const vaultEquity = dashboardStats?.vault_equity ?? vaultStatus.total_equity
+    const unrealizedPnlValue =
+      (vaultStatus.live_equity ?? vaultStatus.total_equity) -
+      vaultStatus.total_equity
+
     overviewData = {
       vaultEquity: {
-        value: vaultStatus.total_equity,
+        value: vaultEquity,
         percentageChange: 0,
         perDay: [],
       },
@@ -51,13 +61,11 @@ export default async function TradingPage() {
       },
       portfolioValue: {
         value: vaultStatus.live_equity ?? vaultStatus.total_equity,
-        percentageChange: 0,
+        percentageChange: dashboardStats ? dashboardStats.total_pnl : 0,
         perDay: [],
       },
       unrealizedPnl: {
-        value:
-          (vaultStatus.live_equity ?? vaultStatus.total_equity) -
-          vaultStatus.total_equity,
+        value: unrealizedPnlValue,
         percentageChange: 0,
         perDay: [],
       },

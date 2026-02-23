@@ -1,5 +1,8 @@
-import type { StrategyStatus } from "@/lib/api-client"
+import type { StrategyInstance } from "@/lib/api-client"
 import type { Metadata } from "next"
+import type { StrategyDefinition } from "./_data/strategy"
+
+import { fallbackStrategies, toStrategyDefinition } from "./_data/strategy"
 
 import { api } from "@/lib/api-client"
 
@@ -12,13 +15,22 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic"
 
 export default async function StrategyPage() {
-  let activeStrategy: StrategyStatus | null = null
+  let strategies: StrategyDefinition[] = fallbackStrategies
+  let runningInstances: StrategyInstance[] = []
 
   try {
-    const status = await api.getStrategyStatus()
-    activeStrategy = status
+    const [registryResponse, instances] = await Promise.all([
+      api.getStrategyRegistry(),
+      api.getStrategies().catch(() => [] as StrategyInstance[]),
+    ])
+
+    if (registryResponse.available_strategies.length > 0) {
+      strategies =
+        registryResponse.available_strategies.map(toStrategyDefinition)
+    }
+    runningInstances = instances
   } catch {
-    activeStrategy = null
+    // Fall back to hardcoded strategies
   }
 
   return (
@@ -32,7 +44,10 @@ export default async function StrategyPage() {
           markets.
         </p>
       </div>
-      <StrategyLayout activeStrategy={activeStrategy} />
+      <StrategyLayout
+        strategies={strategies}
+        runningInstances={runningInstances}
+      />
     </section>
   )
 }

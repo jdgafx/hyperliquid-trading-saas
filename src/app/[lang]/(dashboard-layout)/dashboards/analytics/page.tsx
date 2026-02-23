@@ -1,4 +1,4 @@
-import type { Trade, VaultStatus } from "@/lib/api-client"
+import type { DashboardStats, Trade, VaultStatus } from "@/lib/api-client"
 import type { Metadata } from "next"
 
 import { api } from "@/lib/api-client"
@@ -17,23 +17,36 @@ export const dynamic = "force-dynamic"
 export default async function PerformancePage() {
   let trades: Trade[] = []
   let vaultStatus: VaultStatus | null = null
+  let dashboardStats: DashboardStats | null = null
 
   try {
-    const [apiTrades, apiVault] = await Promise.all([
+    const [apiTrades, apiVault, apiStats] = await Promise.all([
       api.getTrades(500),
       api.getVaultStatus(),
+      api.getDashboardStats().catch(() => null),
     ])
     trades = apiTrades
     vaultStatus = apiVault
+    dashboardStats = apiStats
   } catch (error) {
     console.error("Failed to fetch performance data:", error)
   }
 
   const closedTrades = trades.filter((t) => !t.is_open)
-  const totalPnl = closedTrades.reduce((sum, t) => sum + (t.pnl ?? 0), 0)
-  const wins = closedTrades.filter((t) => (t.pnl ?? 0) > 0)
+
+  // Prefer dashboard stats from backend when available (aggregated across all strategies)
+  const totalPnl =
+    dashboardStats?.total_pnl ??
+    closedTrades.reduce((sum, t) => sum + (t.pnl ?? 0), 0)
   const winRate =
-    closedTrades.length > 0 ? (wins.length / closedTrades.length) * 100 : 0
+    dashboardStats?.win_rate ??
+    (closedTrades.length > 0
+      ? (closedTrades.filter((t) => (t.pnl ?? 0) > 0).length /
+          closedTrades.length) *
+        100
+      : 0)
+  const totalTradesCount = dashboardStats?.total_trades ?? closedTrades.length
+
   const bestTrade =
     closedTrades.length > 0
       ? Math.max(...closedTrades.map((t) => t.pnl ?? 0))
@@ -73,12 +86,12 @@ export default async function PerformancePage() {
   const metrics = {
     totalPnl,
     winRate,
-    totalTrades: closedTrades.length,
+    totalTrades: totalTradesCount,
     bestTrade,
     worstTrade,
     maxDrawdown,
     sharpeRatio: 0,
-    vaultEquity: vaultStatus?.total_equity ?? 0,
+    vaultEquity: dashboardStats?.vault_equity ?? vaultStatus?.total_equity ?? 0,
   }
   return (
     <section className="container grid gap-4 p-4 md:grid-cols-2">

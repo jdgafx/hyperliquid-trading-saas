@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 
-import type { StrategyConfig, StrategyStatus } from "@/lib/api-client"
-import type { StrategyDefinition } from "../_data/strategy"
+import type { StrategyCategory, StrategyDefinition } from "../_data/strategy"
 
 import { api } from "@/lib/api-client"
 
@@ -11,10 +10,21 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
-const CATEGORY_STYLES = {
+const CATEGORY_STYLES: Record<
+  StrategyCategory,
+  {
+    label: string
+    icon: string
+    textColor: string
+    badgeBg: string
+    badgeBorder: string
+    iconBg: string
+    borderLeft: string
+  }
+> = {
   trend: {
     label: "Trend Following",
-    icon: "↗",
+    icon: "^",
     textColor: "text-sky-400",
     badgeBg: "bg-sky-500/10",
     badgeBorder: "border-sky-500/20",
@@ -23,7 +33,7 @@ const CATEGORY_STYLES = {
   },
   "mean-reversion": {
     label: "Mean Reversion",
-    icon: "⇅",
+    icon: "~",
     textColor: "text-violet-400",
     badgeBg: "bg-violet-500/10",
     badgeBorder: "border-violet-500/20",
@@ -32,7 +42,7 @@ const CATEGORY_STYLES = {
   },
   "market-making": {
     label: "Market Making",
-    icon: "⇄",
+    icon: "=",
     textColor: "text-amber-400",
     badgeBg: "bg-amber-500/10",
     badgeBorder: "border-amber-500/20",
@@ -41,14 +51,23 @@ const CATEGORY_STYLES = {
   },
   statistical: {
     label: "Statistical",
-    icon: "∑",
+    icon: "S",
     textColor: "text-emerald-400",
     badgeBg: "bg-emerald-500/10",
     badgeBorder: "border-emerald-500/20",
     iconBg: "bg-emerald-500/10",
     borderLeft: "border-l-emerald-500",
   },
-} as const
+  arbitrage: {
+    label: "Arbitrage",
+    icon: "A",
+    textColor: "text-rose-400",
+    badgeBg: "bg-rose-500/10",
+    badgeBorder: "border-rose-500/20",
+    iconBg: "bg-rose-500/10",
+    borderLeft: "border-l-rose-500",
+  },
+}
 
 const RISK_STYLES = {
   low: {
@@ -73,40 +92,41 @@ const RISK_STYLES = {
 
 interface StrategyCardProps {
   strategy: StrategyDefinition
-  activeStrategy: StrategyStatus | null
+  isRunning: boolean
   selectedPair: string
 }
 
 export function StrategyCard({
   strategy,
-  activeStrategy,
+  isRunning: initiallyRunning,
   selectedPair,
 }: StrategyCardProps) {
-  const isLive = strategy.status === "live"
-  const initiallyRunning = isLive && activeStrategy?.status === "running"
-
   const [isRunning, setIsRunning] = useState(initiallyRunning)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const cat = CATEGORY_STYLES[strategy.category]
+  const cat = CATEGORY_STYLES[strategy.category] ?? CATEGORY_STYLES.statistical
   const risk = RISK_STYLES[strategy.riskLevel]
   const paramEntries = Object.entries(strategy.params)
 
   async function handleStart() {
     setIsLoading(true)
     setError("")
-    const p = strategy.params
-    const config: StrategyConfig = {
-      symbol: selectedPair,
-      timeframe: String(p.timeframe?.default ?? "1h"),
-      lookback_period: Number(p.lookback_period?.default ?? 55),
-      atr_period: Number(p.atr_period?.default ?? 14),
-      atr_multiplier: Number(p.atr_multiplier?.default ?? 2.5),
-      leverage: Number(p.leverage?.default ?? 3),
-    }
     try {
-      await api.startStrategy(config)
+      // First, ensure a strategy instance exists via v2 POST /strategies
+      const instanceName = `${strategy.id}-${selectedPair.toLowerCase()}`
+      try {
+        await api.createStrategy({
+          name: instanceName,
+          strategy_type: strategy.id,
+          symbol: selectedPair,
+          timeframe: strategy.defaultTimeframe,
+          leverage: 3,
+        })
+      } catch {
+        // Instance may already exist -- that's fine
+      }
+      await api.startStrategyV2(instanceName)
       setIsRunning(true)
     } catch {
       setError("Failed to start strategy")
@@ -119,7 +139,8 @@ export function StrategyCard({
     setIsLoading(true)
     setError("")
     try {
-      await api.stopStrategy()
+      const instanceName = `${strategy.id}-${selectedPair.toLowerCase()}`
+      await api.stopStrategyV2(instanceName)
       setIsRunning(false)
     } catch {
       setError("Failed to stop strategy")
@@ -127,6 +148,12 @@ export function StrategyCard({
       setIsLoading(false)
     }
   }
+
+  const tierBadge = (
+    <span className="ml-auto rounded-sm border px-1.5 py-0.5 text-[10px] font-bold tabular-nums leading-none text-muted-foreground">
+      {strategy.tier}
+    </span>
+  )
 
   return (
     <Card
@@ -145,30 +172,24 @@ export function StrategyCard({
             >
               {cat.label}
             </span>
+            {tierBadge}
           </div>
 
-          {isLive ? (
-            isRunning ? (
-              <Badge className="gap-1.5 border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                </span>
-                Running
-              </Badge>
-            ) : (
-              <Badge
-                variant="outline"
-                className="gap-1 border-emerald-500/30 text-emerald-400"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500/60" />
-                Live
-              </Badge>
-            )
+          {isRunning ? (
+            <Badge className="gap-1.5 border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              </span>
+              Running
+            </Badge>
           ) : (
-            <Badge variant="secondary" className="gap-1 text-[11px]">
-              <span className="text-base leading-none">◷</span>
-              Coming Soon
+            <Badge
+              variant="outline"
+              className="gap-1 border-emerald-500/30 text-emerald-400"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500/60" />
+              Ready
             </Badge>
           )}
         </div>
@@ -185,9 +206,14 @@ export function StrategyCard({
 
       <CardContent className="flex flex-1 flex-col gap-4">
         <div className="rounded-lg border bg-muted/20 p-3">
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Parameters
-          </p>
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Parameters
+            </p>
+            <span className="text-[10px] text-muted-foreground">
+              {strategy.defaultSymbol} / {strategy.defaultTimeframe}
+            </span>
+          </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
             {paramEntries.map(([key, param]) => (
               <div
@@ -225,36 +251,23 @@ export function StrategyCard({
         </div>
 
         <div className="mt-auto flex gap-2 pt-1">
-          {isLive ? (
-            <>
-              <Button
-                size="sm"
-                className="flex-1 gap-1.5 bg-emerald-600 text-xs text-white hover:bg-emerald-700"
-                onClick={handleStart}
-                disabled={isLoading || isRunning}
-              >
-                ▶ {isLoading && !isRunning ? "Starting…" : "Start"}
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                className="flex-1 gap-1.5 text-xs"
-                onClick={handleStop}
-                disabled={isLoading || !isRunning}
-              >
-                ■ {isLoading && isRunning ? "Stopping…" : "Stop"}
-              </Button>
-            </>
-          ) : (
-            <Button
-              size="sm"
-              variant="secondary"
-              className="w-full cursor-not-allowed text-xs opacity-50"
-              disabled
-            >
-              Coming Soon
-            </Button>
-          )}
+          <Button
+            size="sm"
+            className="flex-1 gap-1.5 bg-emerald-600 text-xs text-white hover:bg-emerald-700"
+            onClick={handleStart}
+            disabled={isLoading || isRunning}
+          >
+            {isLoading && !isRunning ? "Starting..." : "Start"}
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            className="flex-1 gap-1.5 text-xs"
+            onClick={handleStop}
+            disabled={isLoading || !isRunning}
+          >
+            {isLoading && isRunning ? "Stopping..." : "Stop"}
+          </Button>
         </div>
 
         {error && <p className="text-[11px] text-destructive">{error}</p>}
