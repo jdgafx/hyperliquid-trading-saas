@@ -48,7 +48,7 @@ export const navigationsData: NavigationType[] = [
         iconName: "CreditCard",
       },
       {
-        title: "Notifications",
+        title: "Notification Settings",
         href: "/pages/account/settings/notifications",
         iconName: "Bell",
       },
