@@ -7,7 +7,7 @@ import type { LocaleType } from "@/types"
 import { userData } from "@/data/user"
 
 import { ensureLocalizedPathname } from "@/lib/i18n"
-import { cn, formatNumberToCompact, getInitials } from "@/lib/utils"
+import { cn, getInitials } from "@/lib/utils"
 
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -55,14 +55,9 @@ export function ProfileHeader({ locale }: { locale: LocaleType }) {
               {userData.country}
             </p>
           </div>
-          <div className="inline-flex w-full">
-            <p className="text-primary after:content-['\00b7'] after:mx-1">
-              {formatNumberToCompact(userData.followers)} followers
-            </p>
-            <p className="text-primary">
-              {formatNumberToCompact(userData.connections)} connections
-            </p>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            Connect your wallet to personalize your profile
+          </p>
         </div>
       </div>
     </section>

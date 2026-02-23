@@ -12,5 +12,5 @@ export const routeMap = new Map<string, RouteType>([
   ["/pages/pricing", { type: "public" }],
   ["/docs", { type: "public" }],
   ["/dashboards", { type: "public" }],
-  ["/pages", { type: "protected" }],
+  ["/pages", { type: "public" }],
 ])

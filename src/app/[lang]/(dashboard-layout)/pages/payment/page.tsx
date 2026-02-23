@@ -1,21 +1,15 @@
+import { redirect } from "next/navigation"
+
+import type { LocaleType } from "@/types"
 import type { Metadata } from "next"
 
-import { paymentData } from "./_data/payment"
-
-import { CardTitle } from "@/components/ui/card"
-import { PaymentContent } from "./_components/payment-contnet"
-
-// Define metadata for the page
-// More info: https://nextjs.org/docs/app/building-your-application/optimizing/metadata
 export const metadata: Metadata = {
-  title: "Payment",
+  title: "Deposit",
 }
 
-export default function PaymentPage() {
-  return (
-    <section className="container p-4">
-      <CardTitle className="pb-6">Payment</CardTitle>
-      <PaymentContent data={paymentData} />
-    </section>
-  )
+export default async function PaymentPage(props: {
+  params: Promise<{ lang: LocaleType }>
+}) {
+  const params = await props.params
+  redirect(`/${params.lang}/dashboards/vault`)
 }

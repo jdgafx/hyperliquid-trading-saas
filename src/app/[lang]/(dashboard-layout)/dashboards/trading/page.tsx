@@ -1,11 +1,10 @@
 import type { Metadata } from "next"
-
-import {
-  activePositionsData,
-  performanceData,
-  recentTradesData,
-  tradingOverviewData,
-} from "./_data/trading"
+import type {
+  ActivePosition,
+  PerformanceDataPoint,
+  RecentTrade,
+  TradingOverviewData,
+} from "./types"
 
 import { api } from "@/lib/api-client"
 
@@ -21,10 +20,15 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic"
 
 export default async function TradingPage() {
-  let overviewData = tradingOverviewData
-  let positions = activePositionsData
-  let trades = recentTradesData
-  const perfData = performanceData
+  let overviewData: TradingOverviewData = {
+    vaultEquity: { value: 0, percentageChange: 0, perDay: [] },
+    navPerShare: { value: 0, percentageChange: 0, perDay: [] },
+    portfolioValue: { value: 0, percentageChange: 0, perDay: [] },
+    unrealizedPnl: { value: 0, percentageChange: 0, perDay: [] },
+  }
+  let positions: ActivePosition[] = []
+  let trades: RecentTrade[] = []
+  const perfData: PerformanceDataPoint[] = []
 
   try {
     const [vaultStatus, apiPositions, apiTrades] = await Promise.all([
@@ -38,54 +42,49 @@ export default async function TradingPage() {
       vaultEquity: {
         value: vaultStatus.total_equity,
         percentageChange: 0,
-        perDay: tradingOverviewData.vaultEquity.perDay,
+        perDay: [],
       },
       navPerShare: {
         value: vaultStatus.nav_per_share,
         percentageChange: 0,
-        perDay: tradingOverviewData.navPerShare.perDay,
+        perDay: [],
       },
       portfolioValue: {
         value: vaultStatus.live_equity ?? vaultStatus.total_equity,
         percentageChange: 0,
-        perDay: tradingOverviewData.portfolioValue.perDay,
+        perDay: [],
       },
       unrealizedPnl: {
         value:
           (vaultStatus.live_equity ?? vaultStatus.total_equity) -
           vaultStatus.total_equity,
         percentageChange: 0,
-        perDay: tradingOverviewData.unrealizedPnl.perDay,
+        perDay: [],
       },
     }
 
     // Map API positions to component format
-    if (apiPositions.length > 0) {
-      positions = apiPositions.map((p) => ({
-        symbol: p.symbol,
-        side: p.side,
-        size: p.size,
-        entryPrice: p.entry_price,
-        markPrice: p.mark_price,
-        unrealizedPnl: p.unrealized_pnl,
-        leverage: p.leverage,
-      }))
-    }
+    positions = apiPositions.map((p) => ({
+      symbol: p.symbol,
+      side: p.side,
+      size: p.size,
+      entryPrice: p.entry_price,
+      markPrice: p.mark_price,
+      unrealizedPnl: p.unrealized_pnl,
+      leverage: p.leverage,
+    }))
 
     // Map API trades to component format
-    if (apiTrades.length > 0) {
-      trades = apiTrades.map((t) => ({
-        id: t.id,
-        symbol: t.symbol,
-        side: t.side,
-        size: t.size,
-        entryPrice: t.entry_price,
-        pnl: t.pnl,
-        status: (t.is_open ? "open" : "closed") as "open" | "closed",
-      }))
-    }
+    trades = apiTrades.map((t) => ({
+      id: t.id,
+      symbol: t.symbol,
+      side: t.side,
+      size: t.size,
+      entryPrice: t.entry_price,
+      pnl: t.pnl,
+      status: (t.is_open ? "open" : "closed") as "open" | "closed",
+    }))
   } catch (error) {
-    // Fallback to mock data on API failure — pages still render
     console.error("Failed to fetch trading data:", error)
   }
 

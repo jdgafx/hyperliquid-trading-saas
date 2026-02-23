@@ -1,13 +1,9 @@
+import type { StrategyStatus } from "@/lib/api-client"
 import type { Metadata } from "next"
-import type { StrategyStatusData } from "./_data/strategy"
-
-import { strategyStatusData } from "./_data/strategy"
 
 import { api } from "@/lib/api-client"
 
-import { StrategyConfigForm } from "./_components/strategy-config-form"
-import { StrategyControls } from "./_components/strategy-controls"
-import { StrategyStatus } from "./_components/strategy-status"
+import { StrategyLayout } from "./_components/strategy-layout"
 
 export const metadata: Metadata = {
   title: "Strategy",
@@ -16,34 +12,27 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic"
 
 export default async function StrategyPage() {
-  let strategyData: StrategyStatusData = strategyStatusData
+  let activeStrategy: StrategyStatus | null = null
 
   try {
     const status = await api.getStrategyStatus()
-
-    strategyData = {
-      name: status.name,
-      status: status.status === "running" ? "running" : "stopped",
-      symbol: status.symbol,
-      timeframe: status.timeframe,
-      lookbackPeriod: status.lookback_period,
-      atrPeriod: status.atr_period,
-      atrMultiplier: status.atr_multiplier,
-      leverage: status.leverage,
-      lastSignal: status.last_signal,
-      lastSignalTime: status.last_signal_time,
-    }
-  } catch (error) {
-    console.error("Failed to fetch strategy data:", error)
+    activeStrategy = status
+  } catch {
+    activeStrategy = null
   }
 
   return (
-    <section className="container grid gap-4 p-4 md:grid-cols-2">
-      <div className="md:col-span-2">
-        <StrategyStatus data={strategyData} />
+    <section className="container p-4 md:p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight">
+          Trading Strategies
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Deploy and manage algorithmic strategies on Hyperliquid perpetual
+          markets.
+        </p>
       </div>
-      <StrategyControls initialRunning={strategyData.status === "running"} />
-      <StrategyConfigForm data={strategyData} />
+      <StrategyLayout activeStrategy={activeStrategy} />
     </section>
   )
 }

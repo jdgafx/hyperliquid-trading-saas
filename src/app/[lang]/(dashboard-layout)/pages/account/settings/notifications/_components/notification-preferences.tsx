@@ -13,7 +13,8 @@ export function NotificationPreferences() {
       <CardHeader>
         <CardTitle>Notification Preferences</CardTitle>
         <CardDescription>
-          Adjust your settings to control which notifications you receive.
+          Configure alerts for trading activity, strategy updates, and risk
+          management.
         </CardDescription>
       </CardHeader>
       <CardContent>

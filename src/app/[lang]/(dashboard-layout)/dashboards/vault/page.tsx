@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
-import type { UserSharesData, VaultStatusData } from "./_data/vault"
-
-import {
-  depositHistoryData,
-  userSharesData,
-  vaultStatusData,
+import type {
+  DepositHistoryItem,
+  UserSharesData,
+  VaultStatusData,
 } from "./_data/vault"
 
 import { api } from "@/lib/api-client"
@@ -21,8 +19,20 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic"
 
 export default async function VaultPage() {
-  let vaultData: VaultStatusData = vaultStatusData
-  const sharesData: UserSharesData = userSharesData
+  let vaultData: VaultStatusData = {
+    totalEquity: 0,
+    totalShares: 0,
+    navPerShare: 1.0,
+    liveEquity: 0,
+  }
+  const sharesData: UserSharesData = {
+    shares: 0,
+    portfolioValue: 0,
+    totalDeposited: 0,
+    unrealizedPnl: 0,
+    pnlPercent: 0,
+  }
+  const depositHistory: DepositHistoryItem[] = []
 
   try {
     const status = await api.getVaultStatus()
@@ -44,7 +54,7 @@ export default async function VaultPage() {
       </div>
       <DepositForm />
       <UserShares data={sharesData} />
-      <DepositHistory data={depositHistoryData} />
+      <DepositHistory data={depositHistory} />
     </section>
   )
 }

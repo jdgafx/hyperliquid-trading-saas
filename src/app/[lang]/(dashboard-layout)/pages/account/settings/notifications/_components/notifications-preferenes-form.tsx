@@ -60,10 +60,10 @@ export function NotificationPreferencesForm() {
           render={({ field }) => (
             <FormItem className="flex justify-between items-center gap-8">
               <div>
-                <FormLabel>Security Notifications</FormLabel>
+                <FormLabel>Trade Alerts</FormLabel>
                 <FormDescription>
-                  Set preferences for alerts related to account security, such
-                  as login attempts and changes.
+                  Get notified when strategies open or close positions,
+                  including entry/exit prices and P&L.
                 </FormDescription>
               </div>
               <FormControl>
@@ -78,10 +78,10 @@ export function NotificationPreferencesForm() {
           render={({ field }) => (
             <FormItem className="flex justify-between items-center gap-8">
               <div>
-                <FormLabel>Communication Notifications</FormLabel>
+                <FormLabel>Strategy Status</FormLabel>
                 <FormDescription>
-                  Manage notifications for general communications, including
-                  messages and updates.
+                  Receive updates when strategies start, stop, or encounter
+                  errors.
                 </FormDescription>
               </div>
               <FormControl>
@@ -96,10 +96,10 @@ export function NotificationPreferencesForm() {
           render={({ field }) => (
             <FormItem className="flex justify-between items-center gap-8">
               <div>
-                <FormLabel>Meetups Notifications</FormLabel>
+                <FormLabel>Risk & Drawdown Warnings</FormLabel>
                 <FormDescription>
-                  Customize notifications for upcoming meetups, events, and
-                  related activities.
+                  Alert when drawdown exceeds thresholds or unusual market
+                  conditions are detected.
                 </FormDescription>
               </div>
               <FormControl>
