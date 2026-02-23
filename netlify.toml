@@ -1,5 +1,12 @@
 [build]
+  command = "pnpm build"
   publish = ".next"
+[build.environment]
+  BASE_URL = "https://open-algotrade-pwa.netlify.app"
+  HOME_PATHNAME = "/dashboards/trading"
+  NEXT_PUBLIC_HOME_PATHNAME = "/dashboards/trading"
+  NEXT_PUBLIC_API_URL = "https://api-production-1302.up.railway.app"
+  NEXTAUTH_URL = "https://open-algotrade-pwa.netlify.app"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

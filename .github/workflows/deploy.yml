@@ -1,24 +1,23 @@
-name: Deploy to Netlify
+# Netlify CI handles builds natively via repo connection + netlify.toml
+# This workflow is disabled to avoid conflicts with Netlify's built-in CI
+# Netlify auto-detects Next.js and uses @netlify/plugin-nextjs for SSR
+
+name: Deploy to Netlify (disabled)
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch: # Manual trigger only — Netlify CI handles auto-deploy
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
-
       - run: pnpm build
         env:
           BASE_URL: https://open-algotrade-pwa.netlify.app
@@ -27,12 +26,3 @@ jobs:
           NEXTAUTH_URL: https://open-algotrade-pwa.netlify.app
           NEXT_PUBLIC_API_URL: https://api-production-1302.up.railway.app
           NEXT_PUBLIC_HOME_PATHNAME: /dashboards/trading
-
-      - uses: nwtgck/actions-netlify@v3
-        with:
-          publish-dir: .next
-          production-deploy: true
-          netlify-config-path: ./netlify.toml
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
