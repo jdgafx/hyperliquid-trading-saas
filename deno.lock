@@ -87,6 +87,7 @@
         "npm:eslint-config-prettier@10.1.1",
         "npm:eslint-plugin-prettier@5.2.3",
         "npm:eslint@9.18.0",
+        "npm:framer-motion@^12.34.0",
         "npm:input-otp@1.4.2",
         "npm:lucide-react@0.446.0",
         "npm:negotiator@0.6.3",
