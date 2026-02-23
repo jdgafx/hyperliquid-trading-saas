@@ -23,7 +23,7 @@ export const pricingData: PricingPlansType[] = [
       "Unlock all strategies and advanced analytics for serious traders.",
     price: 49.99,
     features: [
-      "All 6 trading strategies",
+      "All 13 algorithmic strategies",
       "Any Hyperliquid trading pair",
       "Advanced performance analytics",
       "Real-time notifications",

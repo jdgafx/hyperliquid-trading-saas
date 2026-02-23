@@ -16,9 +16,9 @@ export function Register({ dictionary }: { dictionary: DictionaryType }) {
       dictionary={dictionary}
     >
       <AuthHeader>
-        <AuthTitle>Sign Up</AuthTitle>
+        <AuthTitle>Get Started</AuthTitle>
         <AuthDescription>
-          Enter your information to create an account
+          Set up your trading account in 3 quick steps
         </AuthDescription>
       </AuthHeader>
       <AuthForm>
