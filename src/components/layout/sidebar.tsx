@@ -1,9 +1,8 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
-import { ChevronDown } from "lucide-react"
+import { ChartCandlestick, ChevronDown } from "lucide-react"
 
 import type { DictionaryType } from "@/lib/get-dictionary"
 import type {
@@ -44,7 +43,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { DynamicIcon } from "@/components/dynamic-icon"
-import { CommandMenu } from "./command-menu"
 
 export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
   const pathname = usePathname()
@@ -130,19 +128,12 @@ export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
       <SidebarHeader>
         <Link
           href={ensureLocalizedPathname("/", locale)}
-          className="w-fit flex text-foreground font-black p-2 pb-0 mb-2"
+          className="w-fit flex items-center text-foreground font-black p-2 pb-0 mb-2"
           onClick={() => isMobile && setOpenMobile(!openMobile)}
         >
-          <Image
-            src="/images/icons/shadboard.svg"
-            alt=""
-            height={24}
-            width={24}
-            className="dark:invert"
-          />
-          <span>Shadboard</span>
+          <ChartCandlestick className="h-6 w-6 me-2" />
+          <span>Open Algotrade</span>
         </Link>
-        <CommandMenu dictionary={dictionary} buttonClassName="max-w-full" />
       </SidebarHeader>
       <ScrollArea>
         <SidebarContent className="gap-0">

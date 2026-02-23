@@ -1,10 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
-import { LogIn } from "lucide-react"
+import { ChartCandlestick, LogIn } from "lucide-react"
 
 import type { DictionaryType } from "@/lib/get-dictionary"
 import type { LocaleType } from "@/types"
@@ -38,14 +37,8 @@ export function LandingHeader({ dictionary }: { dictionary: DictionaryType }) {
           href="/"
           className="place-self-center w-fit flex text-foreground font-black hover:text-primary/90 lg:place-self-auto"
         >
-          <Image
-            src="/images/icons/shadboard.svg"
-            alt=""
-            height={24}
-            width={24}
-            className="dark:invert"
-          />
-          <span>Shadboard</span>
+          <ChartCandlestick className="h-6 w-6 me-2" />
+          <span>Open Algotrade</span>
         </Link>
         <nav className="hidden lg:block">
           <ul className="place-self-center flex gap-2">

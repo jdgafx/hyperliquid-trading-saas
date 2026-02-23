@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
+import { ChartCandlestick } from "lucide-react"
 
 import type { DictionaryType } from "@/lib/get-dictionary"
 import type { LocaleType } from "@/types"
@@ -10,8 +11,6 @@ import type { ComponentProps } from "react"
 
 import { ensureLocalizedPathname } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
-
-import { LanguageDropdown } from "../language-dropdown"
 
 interface AuthProps extends ComponentProps<"div"> {
   imgSrc?: string
@@ -24,7 +23,7 @@ export function Auth({
   children,
   imgSrc,
   imgClassName,
-  dictionary,
+  dictionary: _dictionary,
   ...props
 }: AuthProps) {
   const params = useParams()
@@ -42,18 +41,11 @@ export function Auth({
         <div className="absolute top-0 inset-x-0 flex justify-between items-center px-4 py-2.5">
           <Link
             href={ensureLocalizedPathname("/", locale)}
-            className="flex text-foreground font-black z-50"
+            className="flex items-center text-foreground font-black z-50"
           >
-            <Image
-              src="/images/icons/shadboard.svg"
-              alt=""
-              height={24}
-              width={24}
-              className="dark:invert"
-            />
-            <span>Shadboard</span>
+            <ChartCandlestick className="h-6 w-6 me-2" />
+            <span>Open Algotrade</span>
           </Link>
-          <LanguageDropdown dictionary={dictionary} />
         </div>
         <div className="max-w-[28rem] w-full m-auto px-6 py-12 space-y-6">
           {children}

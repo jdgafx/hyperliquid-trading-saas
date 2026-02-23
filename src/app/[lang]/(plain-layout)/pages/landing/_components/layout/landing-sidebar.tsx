@@ -1,9 +1,8 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { LogIn, PanelLeft } from "lucide-react"
+import { ChartCandlestick, LogIn, PanelLeft } from "lucide-react"
 
 import type { LocaleType } from "@/types"
 
@@ -60,14 +59,8 @@ export function LandingSidebar({ fullPathname }: { fullPathname: string }) {
               className="w-fit flex text-foreground font-black p-2 pb-0 mb-2 hover:text-primary/90"
               onClick={() => isMobile && setOpenMobile(!openMobile)}
             >
-              <Image
-                src="/images/icons/shadboard.svg"
-                alt=""
-                height={24}
-                width={24}
-                className="dark:invert"
-              />
-              <span>Shadboard</span>
+              <ChartCandlestick className="h-6 w-6 me-2" />
+              <span>Open Algotrade</span>
             </Link>
             <Link
               href={ensureLocalizedPathname("/register", locale)}

@@ -1,5 +1,5 @@
-import Image from "next/image"
 import Link from "next/link"
+import { ChartCandlestick } from "lucide-react"
 
 import { footerNavigationData } from "../../_data/footer-navigation"
 
@@ -16,14 +16,8 @@ export function LandingFooter() {
       <div className="container flex flex-wrap justify-between gap-6 py-6 md:px-6">
         <section className="max-w-prose w-full mb-3 space-y-1.5 md:w-auto">
           <Link href="/" className="w-fit flex text-foreground font-black mb-6">
-            <Image
-              src="/images/icons/shadboard.svg"
-              alt=""
-              height={24}
-              width={24}
-              className="dark:invert"
-            />
-            <span>Shadboard</span>
+            <ChartCandlestick className="h-6 w-6 me-2" />
+            <span>Open Algotrade</span>
           </Link>
           <h3 className="font-semibold leading-none tracking-tight">
             Subscribe to our newsletter
@@ -70,7 +64,7 @@ export function LandingFooter() {
               rel="noopener noreferrer"
               className={cn(buttonVariants({ variant: "link" }), "inline p-0")}
             >
-              Shadboard
+              Open Algotrade
             </a>
             .
           </p>

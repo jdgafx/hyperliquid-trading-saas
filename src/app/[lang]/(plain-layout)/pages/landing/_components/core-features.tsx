@@ -6,7 +6,7 @@ export function CoreFeatures() {
       <div className="text-center mx-auto space-y-1.5">
         <h2 className="text-4xl font-semibold">Core Features</h2>
         <p className="max-w-prose text-sm text-muted-foreground">
-          Shadboard provides all the essentials to create scalable,
+          Open Algotrade provides all the essentials to create scalable,
           user-friendly applications, ensuring a smooth development process.
         </p>
       </div>

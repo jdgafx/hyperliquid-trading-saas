@@ -16,8 +16,8 @@ import { Toaster } from "@/components/ui/toaster"
 // More info: https://nextjs.org/docs/app/building-your-application/optimizing/metadata
 export const metadata: Metadata = {
   title: {
-    template: "%s | Shadboard",
-    default: "Shadboard",
+    template: "%s | Open Algotrade",
+    default: "Open Algotrade",
   },
   description: "",
   metadataBase: new URL(process.env.BASE_URL as string),

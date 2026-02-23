@@ -1,8 +1,8 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ChartCandlestick } from "lucide-react"
 
 import type { NavigationRootItem } from "@/types"
 
@@ -40,14 +40,8 @@ export function DocsSidebar() {
           className="w-fit flex text-foreground font-black p-2 pb-0 mb-2"
           onClick={() => isMobile && setOpenMobile(!openMobile)}
         >
-          <Image
-            src="/images/icons/shadboard.svg"
-            alt=""
-            height={24}
-            width={24}
-            className="dark:invert"
-          />
-          <span>Shadboard</span>
+          <ChartCandlestick className="h-6 w-6 me-2" />
+          <span>Open Algotrade</span>
         </Link>
       </SidebarHeader>
       <ScrollArea className="h-[calc(100svh-4.25rem)]">

@@ -29,10 +29,10 @@ export const footerNavigationData = [
     title: "Resources",
     links: [
       { label: "Documentation", href: "http://localhost:3000/docs" },
-      { label: "GitHub", href: "https://github.com/Qualiora/shadboard" },
+      { label: "GitHub", href: "https://github.com/Qualiora/open-algotrade" },
       {
         label: "Changelog",
-        href: "https://github.com/Qualiora/shadboard/releases",
+        href: "https://github.com/Qualiora/open-algotrade/releases",
       },
       { label: "Support", href: "#contact-us" },
     ],
