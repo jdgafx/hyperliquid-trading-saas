@@ -1,5 +1,10 @@
 {
   "navigation": {
+    "trading": "Trading",
+    "overview": "Overview",
+    "vault": "Vault",
+    "positions": "Positions",
+    "strategy": "Strategy",
     "dashboards": "Dashboards",
     "analytics": "Analytics",
     "crm": "CRM",

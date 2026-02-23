@@ -1,5 +1,10 @@
 {
   "navigation": {
+    "trading": "التداول",
+    "overview": "نظرة عامة",
+    "vault": "الخزينة",
+    "positions": "المراكز",
+    "strategy": "الاستراتيجية",
     "dashboards": "لوحات التحكم",
     "analytics": "التحليلات",
     "crm": "إدارة علاقات العملاء",
