@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     default: "Open Algotrade",
   },
   description: "",
-  metadataBase: new URL(process.env.BASE_URL as string),
+  metadataBase: new URL(process.env.BASE_URL || "https://open-algotrade-pwa.netlify.app"),
 }
 
 // Define fonts for the application

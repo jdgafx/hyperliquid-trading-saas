@@ -7,6 +7,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -19,13 +22,17 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Set Netlify runtime env vars
+        run: |
+          npx --yes netlify-cli env:set NEXTAUTH_SECRET "${{ secrets.NEXTAUTH_SECRET }}" --context production --force
+          npx --yes netlify-cli env:set NEXTAUTH_URL "https://open-algotrade-pwa.netlify.app" --context production --force
+          npx --yes netlify-cli env:set BASE_URL "https://open-algotrade-pwa.netlify.app" --context production --force
+          npx --yes netlify-cli env:set HOME_PATHNAME "/dashboards/trading" --context production --force
+          npx --yes netlify-cli env:set NEXT_PUBLIC_HOME_PATHNAME "/dashboards/trading" --context production --force
+          npx --yes netlify-cli env:set NEXT_PUBLIC_API_URL "https://api-production-1302.up.railway.app" --context production --force
+
       - run: npx --yes netlify-cli build
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
 
       - run: npx --yes netlify-cli deploy --prod
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
