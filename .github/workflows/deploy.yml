@@ -11,8 +11,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - uses: actions/setup-node@v4
         with:
@@ -23,10 +21,11 @@ jobs:
 
       - run: pnpm build
         env:
+          BASE_URL: https://open-algotrade-pwa.netlify.app
           HOME_PATHNAME: /dashboards/trading
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: https://open-algotrade-pwa.netlify.app
-          NEXT_PUBLIC_API_URL: https://open-algotrade-api.onrender.com
+          NEXT_PUBLIC_API_URL: https://api-production-1302.up.railway.app
           NEXT_PUBLIC_HOME_PATHNAME: /dashboards/trading
 
       - uses: nwtgck/actions-netlify@v3
