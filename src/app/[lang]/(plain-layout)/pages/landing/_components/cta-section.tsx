@@ -13,8 +13,8 @@ export function CTASection() {
           Ready to Start Trading?
         </h2>
         <p className="text-emerald-100 mb-8 max-w-xl mx-auto">
-          Join thousands of traders using HyperVault to automate their crypto
-          trading. No minimum experience required.
+          Join thousands of traders using Open Algotrade to automate their
+          crypto trading. No minimum experience required.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg" variant="secondary">

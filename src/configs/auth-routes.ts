@@ -8,7 +8,9 @@ export const routeMap = new Map<string, RouteType>([
   ["/new-password", { type: "guest" }],
   ["", { type: "public" }],
   ["/", { type: "public" }],
-  ["/pages", { type: "public" }],
+  ["/pages/landing", { type: "public" }],
+  ["/pages/pricing", { type: "public" }],
   ["/docs", { type: "public" }],
   ["/dashboards", { type: "public" }],
+  ["/pages", { type: "protected" }],
 ])

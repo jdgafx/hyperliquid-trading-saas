@@ -1,11 +1,10 @@
-import { strategyStatusData } from "../_data/strategy"
+import type { StrategyStatusData } from "../_data/strategy"
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export function StrategyStatus() {
-  const { name, status, symbol, timeframe, lastSignal, lastSignalTime } =
-    strategyStatusData
+export function StrategyStatus({ data }: { data: StrategyStatusData }) {
+  const { name, status, symbol, timeframe, lastSignal, lastSignalTime } = data
 
   return (
     <Card>

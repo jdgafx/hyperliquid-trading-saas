@@ -1,9 +1,4 @@
-import { PrismaAdapter } from "@auth/prisma-adapter"
-
 import type { NextAuthOptions } from "next-auth"
-import type { Adapter } from "next-auth/adapters"
-
-import { db } from "@/lib/prisma"
 
 import CredentialsProvider from "next-auth/providers/credentials"
 
@@ -40,9 +35,6 @@ declare module "next-auth/jwt" {
 // Configuration for NextAuth with custom adapters and providers
 // NextAuth.js documentation: https://next-auth.js.org/getting-started/introduction
 export const authOptions: NextAuthOptions = {
-  // Use Prisma adapter for database interaction
-  // More info: https://next-auth.js.org/getting-started/adapter
-  adapter: PrismaAdapter(db) as Adapter,
   providers: [
     CredentialsProvider({
       name: "Credentials",

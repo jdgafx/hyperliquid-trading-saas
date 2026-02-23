@@ -1,4 +1,4 @@
-import { openPositionsData } from "../_data/positions"
+import type { OpenPosition } from "../_data/positions"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export function OpenPositionsTable() {
+export function OpenPositionsTable({ data }: { data: OpenPosition[] }) {
   return (
     <Table>
       <TableHeader>
@@ -25,7 +25,7 @@ export function OpenPositionsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {openPositionsData.length === 0 ? (
+        {data.length === 0 ? (
           <TableRow>
             <TableCell
               colSpan={7}
@@ -35,7 +35,7 @@ export function OpenPositionsTable() {
             </TableCell>
           </TableRow>
         ) : (
-          openPositionsData.map((pos) => (
+          data.map((pos) => (
             <TableRow key={`${pos.symbol}-${pos.side}`}>
               <TableCell className="font-semibold">{pos.symbol}</TableCell>
               <TableCell>

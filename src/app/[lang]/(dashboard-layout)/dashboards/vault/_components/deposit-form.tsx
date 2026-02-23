@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import { api } from "@/lib/api-client"
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -34,8 +36,10 @@ export function DepositForm() {
     setIsLoading(true)
     setError("")
     try {
-      await new Promise((r) => setTimeout(r, 800))
-      setSuccess(`Successfully deposited $${value.toFixed(2)}`)
+      const result = await api.deposit(1, value)
+      setSuccess(
+        `Deposited $${value.toFixed(2)} — you now hold ${result.shares.toFixed(4)} shares`
+      )
       setAmount("")
     } catch {
       setError("Deposit failed. Please try again.")

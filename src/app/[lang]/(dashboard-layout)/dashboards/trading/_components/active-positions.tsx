@@ -1,4 +1,4 @@
-import { activePositionsData } from "../_data/trading"
+import type { ActivePosition } from "../types"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table"
 import { DashboardCard } from "@/components/dashboards/dashboard-card"
 
-export function ActivePositions() {
+export function ActivePositions({ data }: { data: ActivePosition[] }) {
   return (
     <DashboardCard title="Active Positions" size="sm">
       <Table>
@@ -27,7 +27,7 @@ export function ActivePositions() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {activePositionsData.length === 0 ? (
+          {data.length === 0 ? (
             <TableRow>
               <TableCell
                 colSpan={7}
@@ -37,7 +37,7 @@ export function ActivePositions() {
               </TableCell>
             </TableRow>
           ) : (
-            activePositionsData.map((pos) => (
+            data.map((pos) => (
               <TableRow key={`${pos.symbol}-${pos.side}`}>
                 <TableCell className="font-semibold">{pos.symbol}</TableCell>
                 <TableCell>

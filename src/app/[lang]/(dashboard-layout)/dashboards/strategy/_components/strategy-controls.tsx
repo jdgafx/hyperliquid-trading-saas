@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 
+import { api } from "@/lib/api-client"
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -11,15 +13,43 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export function StrategyControls() {
-  const [isRunning, setIsRunning] = useState(true)
+export function StrategyControls({
+  initialRunning,
+}: {
+  initialRunning: boolean
+}) {
+  const [isRunning, setIsRunning] = useState(initialRunning)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  async function handleToggle() {
+  async function handleStart() {
     setIsLoading(true)
+    setError("")
     try {
-      await new Promise((r) => setTimeout(r, 800))
-      setIsRunning((prev) => !prev)
+      await api.startStrategy({
+        symbol: "BTC",
+        timeframe: "1h",
+        lookback_period: 55,
+        atr_period: 14,
+        atr_multiplier: 2.5,
+        leverage: 3,
+      })
+      setIsRunning(true)
+    } catch {
+      setError("Failed to start strategy")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function handleStop() {
+    setIsLoading(true)
+    setError("")
+    try {
+      await api.stopStrategy()
+      setIsRunning(false)
+    } catch {
+      setError("Failed to stop strategy")
     } finally {
       setIsLoading(false)
     }
@@ -35,24 +65,27 @@ export function StrategyControls() {
             : "Strategy is stopped. Start it to resume trading."}
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex gap-4">
-        <Button
-          size="lg"
-          className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-          onClick={handleToggle}
-          disabled={isLoading || isRunning}
-        >
-          {isLoading && !isRunning ? "Starting..." : "Start Strategy"}
-        </Button>
-        <Button
-          size="lg"
-          variant="destructive"
-          className="flex-1"
-          onClick={handleToggle}
-          disabled={isLoading || !isRunning}
-        >
-          {isLoading && isRunning ? "Stopping..." : "Stop Strategy"}
-        </Button>
+      <CardContent className="space-y-3">
+        <div className="flex gap-4">
+          <Button
+            size="lg"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            onClick={handleStart}
+            disabled={isLoading || isRunning}
+          >
+            {isLoading && !isRunning ? "Starting..." : "Start Strategy"}
+          </Button>
+          <Button
+            size="lg"
+            variant="destructive"
+            className="flex-1"
+            onClick={handleStop}
+            disabled={isLoading || !isRunning}
+          >
+            {isLoading && isRunning ? "Stopping..." : "Stop Strategy"}
+          </Button>
+        </div>
+        {error && <p className="text-sm text-destructive">{error}</p>}
       </CardContent>
     </Card>
   )

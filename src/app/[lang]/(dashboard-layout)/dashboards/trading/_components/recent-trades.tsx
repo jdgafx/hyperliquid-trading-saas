@@ -1,4 +1,4 @@
-import { recentTradesData } from "../_data/trading"
+import type { RecentTrade } from "../types"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table"
 import { DashboardCard } from "@/components/dashboards/dashboard-card"
 
-export function RecentTrades() {
+export function RecentTrades({ data }: { data: RecentTrade[] }) {
   return (
     <DashboardCard title="Recent Trades" size="sm">
       <Table>
@@ -26,40 +26,51 @@ export function RecentTrades() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {recentTradesData.map((trade) => (
-            <TableRow key={trade.id}>
-              <TableCell className="font-semibold">{trade.symbol}</TableCell>
-              <TableCell>
-                <Badge
-                  variant={trade.side === "long" ? "default" : "destructive"}
-                >
-                  {trade.side.toUpperCase()}
-                </Badge>
-              </TableCell>
-              <TableCell>{trade.size}</TableCell>
-              <TableCell>${trade.entryPrice.toLocaleString()}</TableCell>
-              <TableCell>
-                {trade.pnl !== null ? (
-                  <span
-                    className={
-                      trade.pnl >= 0 ? "text-green-500" : "text-red-500"
-                    }
-                  >
-                    {trade.pnl >= 0 ? "+" : ""}${trade.pnl.toFixed(2)}
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground">—</span>
-                )}
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant={trade.status === "open" ? "outline" : "secondary"}
-                >
-                  {trade.status}
-                </Badge>
+          {data.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={6}
+                className="text-center text-muted-foreground"
+              >
+                No trades yet
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            data.map((trade) => (
+              <TableRow key={trade.id}>
+                <TableCell className="font-semibold">{trade.symbol}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={trade.side === "long" ? "default" : "destructive"}
+                  >
+                    {trade.side.toUpperCase()}
+                  </Badge>
+                </TableCell>
+                <TableCell>{trade.size}</TableCell>
+                <TableCell>${trade.entryPrice.toLocaleString()}</TableCell>
+                <TableCell>
+                  {trade.pnl !== null ? (
+                    <span
+                      className={
+                        trade.pnl >= 0 ? "text-green-500" : "text-red-500"
+                      }
+                    >
+                      {trade.pnl >= 0 ? "+" : ""}${trade.pnl.toFixed(2)}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground">—</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={trade.status === "open" ? "outline" : "secondary"}
+                  >
+                    {trade.status}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </DashboardCard>

@@ -1,4 +1,4 @@
-import { depositHistoryData } from "../_data/vault"
+import type { DepositHistoryItem } from "../_data/vault"
 
 import {
   Table,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table"
 import { DashboardCard } from "@/components/dashboards/dashboard-card"
 
-export function DepositHistory() {
+export function DepositHistory({ data }: { data: DepositHistoryItem[] }) {
   return (
     <DashboardCard title="Deposit History" size="sm" className="md:col-span-2">
       <Table>
@@ -23,7 +23,7 @@ export function DepositHistory() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {depositHistoryData.length === 0 ? (
+          {data.length === 0 ? (
             <TableRow>
               <TableCell
                 colSpan={4}
@@ -33,7 +33,7 @@ export function DepositHistory() {
               </TableCell>
             </TableRow>
           ) : (
-            depositHistoryData.map((item) => (
+            data.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.date}</TableCell>
                 <TableCell className="font-semibold">

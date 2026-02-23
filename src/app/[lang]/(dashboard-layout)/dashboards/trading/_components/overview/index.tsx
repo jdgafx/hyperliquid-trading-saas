@@ -1,4 +1,4 @@
-import { tradingOverviewData } from "../../_data/trading"
+import type { TradingOverviewData } from "../../types"
 
 import {
   DashboardCardActionsDropdown,
@@ -9,57 +9,47 @@ import { PortfolioValueChart } from "./portfolio-value-chart"
 import { UnrealizedPnlChart } from "./unrealized-pnl-chart"
 import { VaultEquityChart } from "./vault-equity-chart"
 
-export function TradingOverview() {
+export function TradingOverview({ data }: { data: TradingOverviewData }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:col-span-full md:grid-cols-4">
       <DashboardOverviewCardV3
         data={{
-          value: tradingOverviewData.vaultEquity.value,
-          percentageChange: tradingOverviewData.vaultEquity.percentageChange,
+          value: data.vaultEquity.value,
+          percentageChange: data.vaultEquity.percentageChange,
         }}
         formatStyle="currency"
         title="Vault Equity"
         action={<DashboardCardActionsDropdown />}
-        chart={
-          <VaultEquityChart data={tradingOverviewData.vaultEquity.perDay} />
-        }
+        chart={<VaultEquityChart data={data.vaultEquity.perDay} />}
       />
       <DashboardOverviewCardV3
         data={{
-          value: tradingOverviewData.navPerShare.value,
-          percentageChange: tradingOverviewData.navPerShare.percentageChange,
+          value: data.navPerShare.value,
+          percentageChange: data.navPerShare.percentageChange,
         }}
         title="NAV Per Share"
         action={<DashboardCardActionsDropdown />}
-        chart={
-          <NavPerShareChart data={tradingOverviewData.navPerShare.perDay} />
-        }
+        chart={<NavPerShareChart data={data.navPerShare.perDay} />}
       />
       <DashboardOverviewCardV3
         data={{
-          value: tradingOverviewData.portfolioValue.value,
-          percentageChange: tradingOverviewData.portfolioValue.percentageChange,
+          value: data.portfolioValue.value,
+          percentageChange: data.portfolioValue.percentageChange,
         }}
         formatStyle="currency"
         title="Your Portfolio"
         action={<DashboardCardActionsDropdown />}
-        chart={
-          <PortfolioValueChart
-            data={tradingOverviewData.portfolioValue.perDay}
-          />
-        }
+        chart={<PortfolioValueChart data={data.portfolioValue.perDay} />}
       />
       <DashboardOverviewCardV3
         data={{
-          value: tradingOverviewData.unrealizedPnl.value,
-          percentageChange: tradingOverviewData.unrealizedPnl.percentageChange,
+          value: data.unrealizedPnl.value,
+          percentageChange: data.unrealizedPnl.percentageChange,
         }}
         formatStyle="currency"
         title="Unrealized P&L"
         action={<DashboardCardActionsDropdown />}
-        chart={
-          <UnrealizedPnlChart data={tradingOverviewData.unrealizedPnl.perDay} />
-        }
+        chart={<UnrealizedPnlChart data={data.unrealizedPnl.perDay} />}
       />
     </div>
   )

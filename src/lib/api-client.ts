@@ -16,7 +16,7 @@ export interface VaultStatus {
   total_equity: number
   total_shares: number
   nav_per_share: number
-  live_equity: number
+  live_equity: number | null
 }
 
 export interface Portfolio {

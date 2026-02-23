@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 
-import { strategyStatusData } from "../_data/strategy"
+import type { StrategyStatusData } from "../_data/strategy"
+
+import { api } from "@/lib/api-client"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -22,29 +24,34 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function StrategyConfigForm() {
-  const [symbol, setSymbol] = useState(strategyStatusData.symbol)
-  const [timeframe, setTimeframe] = useState(strategyStatusData.timeframe)
-  const [lookback, setLookback] = useState(
-    String(strategyStatusData.lookbackPeriod)
-  )
-  const [atrPeriod, setAtrPeriod] = useState(
-    String(strategyStatusData.atrPeriod)
-  )
-  const [atrMultiplier, setAtrMultiplier] = useState(
-    String(strategyStatusData.atrMultiplier)
-  )
-  const [leverage, setLeverage] = useState(String(strategyStatusData.leverage))
+export function StrategyConfigForm({ data }: { data: StrategyStatusData }) {
+  const [symbol, setSymbol] = useState(data.symbol)
+  const [timeframe, setTimeframe] = useState(data.timeframe)
+  const [lookback, setLookback] = useState(String(data.lookbackPeriod))
+  const [atrPeriod, setAtrPeriod] = useState(String(data.atrPeriod))
+  const [atrMultiplier, setAtrMultiplier] = useState(String(data.atrMultiplier))
+  const [leverage, setLeverage] = useState(String(data.leverage))
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState("")
 
   async function handleSave() {
     setIsSaving(true)
     setSaved(false)
+    setError("")
     try {
-      await new Promise((r) => setTimeout(r, 600))
+      await api.startStrategy({
+        symbol,
+        timeframe,
+        lookback_period: parseInt(lookback),
+        atr_period: parseInt(atrPeriod),
+        atr_multiplier: parseFloat(atrMultiplier),
+        leverage: parseInt(leverage),
+      })
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
+    } catch {
+      setError("Failed to save configuration")
     } finally {
       setIsSaving(false)
     }
@@ -139,6 +146,7 @@ export function StrategyConfigForm() {
           {saved && (
             <span className="text-sm text-green-500">Configuration saved!</span>
           )}
+          {error && <span className="text-sm text-destructive">{error}</span>}
         </div>
       </CardContent>
     </Card>

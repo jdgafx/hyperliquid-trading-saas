@@ -1,8 +1,8 @@
-import { vaultStatusData } from "../_data/vault"
+import type { VaultStatusData } from "../_data/vault"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export function VaultStatus() {
+export function VaultStatus({ data }: { data: VaultStatusData }) {
   return (
     <Card>
       <CardHeader>
@@ -14,7 +14,7 @@ export function VaultStatus() {
             <p className="text-sm text-muted-foreground">Total Equity</p>
             <p className="text-xl font-semibold">
               $
-              {vaultStatusData.totalEquity.toLocaleString("en-US", {
+              {data.totalEquity.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
               })}
             </p>
@@ -22,20 +22,20 @@ export function VaultStatus() {
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Total Shares</p>
             <p className="text-xl font-semibold">
-              {vaultStatusData.totalShares.toLocaleString()}
+              {data.totalShares.toLocaleString()}
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">NAV Per Share</p>
             <p className="text-xl font-semibold">
-              ${vaultStatusData.navPerShare.toFixed(4)}
+              ${data.navPerShare.toFixed(4)}
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Live Equity</p>
             <p className="text-xl font-semibold">
               $
-              {vaultStatusData.liveEquity.toLocaleString("en-US", {
+              {data.liveEquity.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
               })}
             </p>

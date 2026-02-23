@@ -1,12 +1,16 @@
-import { performanceData } from "../_data/trading"
+import type { PerformanceDataPoint } from "../types"
 
 import { DashboardCard } from "@/components/dashboards/dashboard-card"
 import { PerformanceChart } from "./performance-chart"
 
-export function PortfolioPerformance() {
+export function PortfolioPerformance({
+  data,
+}: {
+  data: PerformanceDataPoint[]
+}) {
   return (
     <DashboardCard title="Portfolio Performance" size="default">
-      <PerformanceChart data={performanceData} />
+      <PerformanceChart data={data} />
     </DashboardCard>
   )
 }
