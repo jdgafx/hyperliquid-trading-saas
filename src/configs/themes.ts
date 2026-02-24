@@ -4,8 +4,8 @@ export const themes = {
   zinc: {
     label: "Zinc",
     activeColor: {
-      light: "217 91% 50%",
-      dark: "217 91% 60%",
+      light: "211 100% 50%",
+      dark: "211 100% 50%",
       foreground: "0 0% 100%",
     },
   },
@@ -76,8 +76,8 @@ export const themes = {
   blue: {
     label: "Blue",
     activeColor: {
-      light: "217 91% 50%",
-      dark: "217 91% 60%",
+      light: "211 100% 50%",
+      dark: "211 100% 50%",
       foreground: "0 0% 100%",
     },
   },

@@ -38,12 +38,10 @@ export function Auth({
             href={ensureLocalizedPathname("/", locale)}
             className="flex items-center text-foreground font-black z-50"
           >
-            <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25">
+            <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(211,100%,50%)]">
               <ChartCandlestick className="h-4 w-4 text-white" />
             </span>
-            <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Open Algotrade
-            </span>
+            <span className="text-foreground">Open Algotrade</span>
           </Link>
         </div>
         <div className="max-w-[28rem] w-full m-auto px-6 py-12 space-y-6">
@@ -62,16 +60,16 @@ export function Auth({
 
 function AuthBrandedPanel() {
   return (
-    <div className="basis-1/2 relative hidden min-h-screen md:flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950/80 to-slate-950 dark:from-slate-950 dark:via-blue-950/60 dark:to-slate-950">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.08),transparent_70%)]" />
+    <div className="basis-1/2 relative hidden min-h-screen md:flex flex-col items-center justify-center bg-black">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,122,255,0.06),transparent_70%)]" />
       <div className="relative z-10 flex flex-col items-center gap-6 px-8 text-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[hsl(211,100%,50%)]">
           <ChartCandlestick className="h-9 w-9 text-white" />
         </span>
-        <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-emerald-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+        <h2 className="text-2xl font-bold tracking-tight text-white">
           Algorithmic Trading on Hyperliquid
         </h2>
-        <p className="max-w-xs text-sm leading-relaxed text-slate-400">
+        <p className="max-w-xs text-sm leading-relaxed text-neutral-400">
           13 strategies. Zero emotion. Pure alpha.
         </p>
         <div className="mt-4 flex gap-2">
@@ -79,7 +77,7 @@ function AuthBrandedPanel() {
             (name) => (
               <span
                 key={name}
-                className="rounded-full border border-slate-700/60 bg-slate-800/50 px-2.5 py-0.5 text-[0.65rem] text-slate-400"
+                className="rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-0.5 text-[0.65rem] text-neutral-400"
               >
                 {name}
               </span>

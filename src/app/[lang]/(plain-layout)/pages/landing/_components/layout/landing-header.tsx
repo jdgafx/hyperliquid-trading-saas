@@ -37,12 +37,10 @@ export function LandingHeader({ dictionary }: { dictionary: DictionaryType }) {
           href="/"
           className="place-self-center w-fit flex items-center text-foreground font-black hover:text-primary/90 lg:place-self-auto"
         >
-          <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25">
+          <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(211,100%,50%)]">
             <ChartCandlestick className="h-4 w-4 text-white" />
           </span>
-          <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            Open Algotrade
-          </span>
+          <span className="text-foreground">Open Algotrade</span>
         </Link>
         <nav className="hidden lg:block">
           <ul className="place-self-center flex gap-2">

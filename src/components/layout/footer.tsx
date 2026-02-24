@@ -40,9 +40,7 @@ export function Footer() {
             CGDarkstardev1
           </a>
           {" / "}
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent font-medium">
-            NewDawn AI
-          </span>
+          <span className="text-primary font-medium">NewDawn AI</span>
         </p>
       </div>
     </footer>

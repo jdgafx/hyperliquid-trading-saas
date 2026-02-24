@@ -59,12 +59,10 @@ export function LandingSidebar({ fullPathname }: { fullPathname: string }) {
               className="w-fit flex items-center text-foreground font-black p-2 pb-0 mb-2 hover:text-primary/90"
               onClick={() => isMobile && setOpenMobile(!openMobile)}
             >
-              <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25">
+              <span className="relative me-2 flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(211,100%,50%)]">
                 <ChartCandlestick className="h-4 w-4 text-white" />
               </span>
-              <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                Open Algotrade
-              </span>
+              <span className="text-foreground">Open Algotrade</span>
             </Link>
             <Link
               href={ensureLocalizedPathname("/register", locale)}
