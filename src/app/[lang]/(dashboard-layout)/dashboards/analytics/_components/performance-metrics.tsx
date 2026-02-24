@@ -37,12 +37,12 @@ export function PerformanceMetrics({ metrics }: PerformanceMetricsProps) {
     {
       label: "Best Trade",
       value: formatCurrency(bestTrade),
-      valueClass: "text-emerald-500",
+      valueClass: "text-success",
     },
     {
       label: "Worst Trade",
       value: formatCurrency(worstTrade),
-      valueClass: "text-red-500",
+      valueClass: "text-destructive",
     },
     {
       label: "Sharpe Ratio",

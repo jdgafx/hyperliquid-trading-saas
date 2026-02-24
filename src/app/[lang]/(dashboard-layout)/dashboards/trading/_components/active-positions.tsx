@@ -53,7 +53,9 @@ export function ActivePositions({ data }: { data: ActivePosition[] }) {
                 <TableCell>
                   <span
                     className={
-                      pos.unrealizedPnl >= 0 ? "text-green-500" : "text-red-500"
+                      pos.unrealizedPnl >= 0
+                        ? "text-success"
+                        : "text-destructive"
                     }
                   >
                     {pos.unrealizedPnl >= 0 ? "+" : ""}$

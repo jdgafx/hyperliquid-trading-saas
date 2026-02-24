@@ -36,7 +36,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       // Parse hue and saturation from the HSL string "H S% L%"
       const [h, s] = hsl.split(" ")
       // Set sidebar to a tinted background based on the theme color
-      const sidebarBg = isDarkMode ? `${h} ${s} 6%` : `${h} ${s} 97%`
+      const sidebarBg = isDarkMode ? "0 0% 2%" : `${h} ${s} 97%`
       const sidebarAccent = isDarkMode ? `${h} ${s} 12%` : `${h} ${s} 93%`
       const sidebarForeground = isDarkMode
         ? theme.activeColor.foreground

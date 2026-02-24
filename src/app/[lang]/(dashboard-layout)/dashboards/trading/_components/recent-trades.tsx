@@ -52,7 +52,7 @@ export function RecentTrades({ data }: { data: RecentTrade[] }) {
                   {trade.pnl !== null ? (
                     <span
                       className={
-                        trade.pnl >= 0 ? "text-green-500" : "text-red-500"
+                        trade.pnl >= 0 ? "text-success" : "text-destructive"
                       }
                     >
                       {trade.pnl >= 0 ? "+" : ""}${trade.pnl.toFixed(2)}

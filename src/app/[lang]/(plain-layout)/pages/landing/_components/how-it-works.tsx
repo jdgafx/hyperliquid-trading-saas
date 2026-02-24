@@ -37,12 +37,12 @@ export function HowItWorks() {
       <div className="grid md:grid-cols-3 gap-8">
         {steps.map((step) => (
           <div key={step.number} className="relative">
-            <div className="text-6xl font-black text-emerald-500/20 absolute -top-2 -left-2">
+            <div className="text-6xl font-black text-primary/20 absolute -top-2 -left-2">
               {step.number}
             </div>
             <div className="pt-8 pl-4">
-              <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4">
-                <step.icon className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <step.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
               <p className="text-muted-foreground">{step.description}</p>

@@ -113,7 +113,9 @@ export function HyperliquidConnection() {
             <span className="flex items-center gap-1.5 text-xs font-medium">
               <span
                 className={`inline-block h-2 w-2 rounded-full ${
-                  connectionStatus.connected ? "bg-green-500" : "bg-gray-400"
+                  connectionStatus.connected
+                    ? "bg-primary"
+                    : "bg-muted-foreground"
                 }`}
               />
               {connectionStatus.connected ? "Connected" : "Not connected"}
@@ -128,11 +130,11 @@ export function HyperliquidConnection() {
       </CardHeader>
       <CardContent className="space-y-4">
         {connectionStatus.connected && connectionStatus.address && (
-          <div className="rounded-md border border-green-200 bg-green-50 p-3 dark:border-green-900 dark:bg-green-950">
-            <p className="text-sm font-medium text-green-800 dark:text-green-200">
+          <div className="rounded-md border border-primary/20 bg-primary/5 p-3">
+            <p className="text-sm font-medium text-primary">
               Currently connected
             </p>
-            <p className="mt-0.5 font-mono text-xs text-green-700 dark:text-green-300">
+            <p className="mt-0.5 font-mono text-xs text-primary/70">
               {connectionStatus.address}
             </p>
           </div>
@@ -187,9 +189,7 @@ export function HyperliquidConnection() {
 
         {error && <p className="text-sm text-destructive">{error}</p>}
         {successMessage && (
-          <p className="text-sm text-green-600 dark:text-green-400">
-            {successMessage}
-          </p>
+          <p className="text-sm text-primary">{successMessage}</p>
         )}
 
         <div className="flex gap-2">

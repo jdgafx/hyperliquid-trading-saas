@@ -144,7 +144,7 @@ export function StrategyConfigForm({ data }: { data: StrategyStatusData }) {
             {isSaving ? "Saving..." : "Save Configuration"}
           </Button>
           {saved && (
-            <span className="text-sm text-green-500">Configuration saved!</span>
+            <span className="text-sm text-success">Configuration saved!</span>
           )}
           {error && <span className="text-sm text-destructive">{error}</span>}
         </div>

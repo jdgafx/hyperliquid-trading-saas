@@ -52,17 +52,17 @@ export function PerformanceOverview({ metrics }: PerformanceOverviewProps) {
       value: formatCurrency(totalPnl),
       valueClass: cn(
         "text-2xl font-bold tabular-nums",
-        totalPnl >= 0 ? "text-emerald-500" : "text-red-500"
+        totalPnl >= 0 ? "text-success" : "text-destructive"
       ),
       sub: totalPnl >= 0 ? "Profitable" : "In drawdown",
-      subClass: totalPnl >= 0 ? "text-emerald-500/70" : "text-red-500/70",
+      subClass: totalPnl >= 0 ? "text-success/70" : "text-destructive/70",
     },
     {
       label: "Win Rate",
       value: `${winRate.toFixed(1)}%`,
       valueClass: cn(
         "text-2xl font-bold tabular-nums",
-        winRate >= 50 ? "text-emerald-500" : "text-amber-500"
+        winRate >= 50 ? "text-success" : "text-amber-500"
       ),
       sub: `${Math.round(winRate)}% of trades won`,
       subClass: "text-muted-foreground",
@@ -77,7 +77,7 @@ export function PerformanceOverview({ metrics }: PerformanceOverviewProps) {
     {
       label: "Max Drawdown",
       value: formatCurrency(maxDrawdown),
-      valueClass: "text-2xl font-bold tabular-nums text-red-500",
+      valueClass: "text-2xl font-bold tabular-nums text-destructive",
       sub: "Peak-to-trough loss",
       subClass: "text-muted-foreground",
     },

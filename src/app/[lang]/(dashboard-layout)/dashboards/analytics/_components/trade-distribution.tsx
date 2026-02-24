@@ -16,8 +16,8 @@ interface TradeDistributionProps {
 }
 
 const chartConfig = {
-  wins: { label: "Wins", color: "hsl(142, 71%, 45%)" },
-  losses: { label: "Losses", color: "hsl(0, 72%, 51%)" },
+  wins: { label: "Wins", color: "hsl(var(--success))" },
+  losses: { label: "Losses", color: "hsl(var(--destructive))" },
 }
 
 export function TradeDistribution({ trades }: TradeDistributionProps) {
@@ -44,22 +44,22 @@ export function TradeDistribution({ trades }: TradeDistributionProps) {
       <div className="flex h-full flex-col gap-4">
         <div className="flex items-center gap-6 text-sm">
           <span className="flex items-center gap-1.5">
-            <span className="inline-block size-2.5 rounded-sm bg-emerald-500" />
+            <span className="inline-block size-2.5 rounded-sm bg-success" />
             <span className="text-muted-foreground">Wins</span>
-            <span className="ml-1 font-bold text-emerald-500">{wins}</span>
+            <span className="ml-1 font-bold text-success">{wins}</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="inline-block size-2.5 rounded-sm bg-red-500" />
+            <span className="inline-block size-2.5 rounded-sm bg-destructive" />
             <span className="text-muted-foreground">Losses</span>
-            <span className="ml-1 font-bold text-red-500">{losses}</span>
+            <span className="ml-1 font-bold text-destructive">{losses}</span>
           </span>
           <span className="ml-auto text-xs text-muted-foreground">
             {winRate}% win rate
           </span>
         </div>
-        <div className="relative h-2 overflow-hidden rounded-full bg-red-100 dark:bg-red-950">
+        <div className="relative h-2 overflow-hidden rounded-full bg-destructive/20">
           <div
-            className="absolute inset-y-0 left-0 rounded-full bg-emerald-500 transition-all duration-700"
+            className="absolute inset-y-0 left-0 rounded-full bg-success transition-all duration-700"
             style={{ width: `${winRate}%` }}
           />
         </div>

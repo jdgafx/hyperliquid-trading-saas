@@ -11,19 +11,19 @@ export function TrustIndicators() {
         </p>
         <div className="flex flex-wrap justify-center gap-8 md:gap-16">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Shield className="w-5 h-5 text-emerald-500" />
+            <Shield className="w-5 h-5 text-primary" />
             <span className="font-semibold">SECURE</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Lock className="w-5 h-5 text-emerald-500" />
+            <Lock className="w-5 h-5 text-primary" />
             <span className="font-semibold">NON-CUSTODIAL</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Globe className="w-5 h-5 text-emerald-500" />
+            <Globe className="w-5 h-5 text-primary" />
             <span className="font-semibold">GLOBAL</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Activity className="w-5 h-5 text-emerald-500" />
+            <Activity className="w-5 h-5 text-primary" />
             <span className="font-semibold">24/7 AUTOMATED</span>
           </div>
         </div>

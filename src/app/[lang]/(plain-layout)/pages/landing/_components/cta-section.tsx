@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button"
 
 export function CTASection() {
   return (
-    <section className="bg-emerald-500 py-20">
+    <section className="bg-primary py-20">
       <div className="container text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
           Ready to Start Trading?
         </h2>
-        <p className="text-emerald-100 mb-8 max-w-xl mx-auto">
+        <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
           Join thousands of traders using Open Algotrade to automate their
           crypto trading. No minimum experience required.
         </p>

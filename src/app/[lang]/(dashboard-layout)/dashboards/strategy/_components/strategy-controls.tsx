@@ -93,7 +93,7 @@ export function StrategyControls({
         <div className="flex gap-4">
           <Button
             size="lg"
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
             onClick={handleStart}
             disabled={isLoading || isRunning}
           >

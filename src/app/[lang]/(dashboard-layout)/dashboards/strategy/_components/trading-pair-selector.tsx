@@ -173,7 +173,7 @@ export function TradingPairSelector({
                   </p>
                   <p
                     className={`font-mono text-sm font-semibold leading-tight ${
-                      fundingIsPositive ? "text-emerald-500" : "text-red-500"
+                      fundingIsPositive ? "text-success" : "text-destructive"
                     }`}
                   >
                     {fundingIsPositive ? "+" : ""}

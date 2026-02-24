@@ -31,7 +31,7 @@ export function UserShares({ data }: { data: UserSharesData }) {
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Unrealized P&L</p>
             <p
-              className={`text-xl font-semibold ${pnlPositive ? "text-green-500" : "text-red-500"}`}
+              className={`text-xl font-semibold ${pnlPositive ? "text-success" : "text-destructive"}`}
             >
               {pnlPositive ? "+" : ""}${data.unrealizedPnl.toFixed(2)}{" "}
               <span className="text-sm">

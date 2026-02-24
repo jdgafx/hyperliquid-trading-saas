@@ -138,8 +138,8 @@ export function DepositForm() {
                     : "Connected"}
                 </p>
               </div>
-              <span className="flex items-center gap-1.5 text-xs font-medium text-green-600 dark:text-green-400">
-                <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+              <span className="flex items-center gap-1.5 text-xs font-medium text-success">
+                <span className="inline-block h-2 w-2 rounded-full bg-success" />
                 Connected
               </span>
             </div>
@@ -155,7 +155,7 @@ export function DepositForm() {
                 onChange={handleAmountChange}
               />
               {error && <p className="text-sm text-destructive">{error}</p>}
-              {success && <p className="text-sm text-green-500">{success}</p>}
+              {success && <p className="text-sm text-success">{success}</p>}
             </div>
             <Button
               onClick={handleDeposit}

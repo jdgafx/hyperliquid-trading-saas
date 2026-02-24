@@ -9,9 +9,9 @@ import { StrategyCard } from "./strategy-card"
 import { TradingPairSelector } from "./trading-pair-selector"
 
 const TIER_LABELS: Record<StrategyTier, { label: string; color: string }> = {
-  A: { label: "Tier A - HL Native", color: "text-emerald-500" },
+  A: { label: "Tier A - HL Native", color: "text-primary" },
   B: { label: "Tier B - Bonus", color: "text-amber-500" },
-  C: { label: "Tier C - Bootcamp", color: "text-sky-500" },
+  C: { label: "Tier C - Bootcamp", color: "text-muted-foreground" },
 }
 
 interface StrategyLayoutProps {

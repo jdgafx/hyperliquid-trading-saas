@@ -299,7 +299,7 @@ export function StrategyCard({
                     <div
                       key={n}
                       className={`h-2.5 w-2.5 rounded-full ${
-                        n <= strategy.returnSpeed ? "bg-cyan-500" : "bg-muted"
+                        n <= strategy.returnSpeed ? "bg-primary" : "bg-muted"
                       }`}
                     />
                   ))}
@@ -359,7 +359,7 @@ export function StrategyCard({
         <div className="mt-auto flex gap-2 pt-1">
           <Button
             size="sm"
-            className="flex-1 gap-1.5 bg-emerald-600 text-xs text-white hover:bg-emerald-700"
+            className="flex-1 gap-1.5 bg-primary text-xs text-primary-foreground hover:bg-primary/90"
             onClick={handleStart}
             disabled={isLoading || isRunning}
           >

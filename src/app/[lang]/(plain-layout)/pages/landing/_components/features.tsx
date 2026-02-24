@@ -46,8 +46,8 @@ export function Features() {
         {features.map((feature) => (
           <Card key={feature.title} className="border-muted">
             <CardContent className="pt-6">
-              <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4">
-                <feature.icon className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <feature.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-semibold mb-2">{feature.title}</h3>
               <p className="text-sm text-muted-foreground">
