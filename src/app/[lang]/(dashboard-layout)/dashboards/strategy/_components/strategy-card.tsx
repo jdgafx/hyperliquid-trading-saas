@@ -29,20 +29,20 @@ const CATEGORY_STYLES: Record<
   trend: {
     label: "Trend Following",
     icon: "^",
-    textColor: "text-sky-400",
-    badgeBg: "bg-sky-500/10",
-    badgeBorder: "border-sky-500/20",
-    iconBg: "bg-sky-500/10",
-    borderLeft: "border-l-sky-500",
+    textColor: "text-primary",
+    badgeBg: "bg-primary/10",
+    badgeBorder: "border-primary/20",
+    iconBg: "bg-primary/10",
+    borderLeft: "border-l-primary",
   },
   "mean-reversion": {
     label: "Mean Reversion",
     icon: "~",
-    textColor: "text-violet-400",
-    badgeBg: "bg-violet-500/10",
-    badgeBorder: "border-violet-500/20",
-    iconBg: "bg-violet-500/10",
-    borderLeft: "border-l-violet-500",
+    textColor: "text-chart-5",
+    badgeBg: "bg-chart-5/10",
+    badgeBorder: "border-chart-5/20",
+    iconBg: "bg-chart-5/10",
+    borderLeft: "border-l-chart-5",
   },
   "market-making": {
     label: "Market Making",
@@ -56,11 +56,11 @@ const CATEGORY_STYLES: Record<
   statistical: {
     label: "Statistical",
     icon: "S",
-    textColor: "text-emerald-400",
-    badgeBg: "bg-emerald-500/10",
-    badgeBorder: "border-emerald-500/20",
-    iconBg: "bg-emerald-500/10",
-    borderLeft: "border-l-emerald-500",
+    textColor: "text-success",
+    badgeBg: "bg-success/10",
+    badgeBorder: "border-success/20",
+    iconBg: "bg-success/10",
+    borderLeft: "border-l-success",
   },
   arbitrage: {
     label: "Arbitrage",
@@ -77,8 +77,8 @@ const RISK_STYLES = {
   low: {
     label: "Low",
     bars: 1,
-    barColor: "bg-emerald-500",
-    textColor: "text-emerald-500",
+    barColor: "bg-success",
+    textColor: "text-success",
   },
   medium: {
     label: "Medium",
@@ -89,8 +89,8 @@ const RISK_STYLES = {
   high: {
     label: "High",
     bars: 3,
-    barColor: "bg-red-500",
-    textColor: "text-red-500",
+    barColor: "bg-destructive",
+    textColor: "text-destructive",
   },
 } as const
 
@@ -107,9 +107,9 @@ const HORIZON_STYLES: Record<
   "quick-gains": {
     label: "QUICK GAINS",
     sublabel: "Minutes to Hours",
-    bgColor: "bg-red-500/15",
-    textColor: "text-red-500",
-    borderColor: "border-red-500/30",
+    bgColor: "bg-destructive/15",
+    textColor: "text-destructive",
+    borderColor: "border-destructive/30",
   },
   "short-term": {
     label: "SHORT TERM",
@@ -121,23 +121,23 @@ const HORIZON_STYLES: Record<
   "medium-term": {
     label: "MEDIUM TERM",
     sublabel: "Days to Weeks",
-    bgColor: "bg-blue-500/15",
-    textColor: "text-blue-500",
-    borderColor: "border-blue-500/30",
+    bgColor: "bg-primary/15",
+    textColor: "text-primary",
+    borderColor: "border-primary/30",
   },
   "long-term": {
     label: "LONG TERM",
     sublabel: "Weeks to Months",
-    bgColor: "bg-indigo-500/15",
-    textColor: "text-indigo-500",
-    borderColor: "border-indigo-500/30",
+    bgColor: "bg-primary/10",
+    textColor: "text-primary/70",
+    borderColor: "border-primary/20",
   },
   "steady-income": {
     label: "STEADY INCOME",
     sublabel: "Ongoing Returns",
-    bgColor: "bg-emerald-500/15",
-    textColor: "text-emerald-500",
-    borderColor: "border-emerald-500/30",
+    bgColor: "bg-success/15",
+    textColor: "text-success",
+    borderColor: "border-success/30",
   },
 }
 
@@ -228,19 +228,19 @@ export function StrategyCard({
           </div>
 
           {isRunning ? (
-            <Badge className="gap-1.5 border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+            <Badge className="gap-1.5 border-success/20 bg-success/10 text-success">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
               </span>
               Running
             </Badge>
           ) : (
             <Badge
               variant="outline"
-              className="gap-1 border-emerald-500/30 text-emerald-400"
+              className="gap-1 border-primary/30 text-primary"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500/60" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
               Ready
             </Badge>
           )}
