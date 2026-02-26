@@ -9,13 +9,58 @@ export const navigationsData: NavigationType[] = [
         href: "/dashboards/trading",
         iconName: "ChartCandlestick",
       },
-      { title: "Vault", href: "/dashboards/vault", iconName: "Vault" },
+      {
+        title: "Risk Controller",
+        href: "/dashboards/risk",
+        iconName: "ShieldAlert",
+      },
+      { title: "Strategies", href: "/dashboards/strategy", iconName: "Bot" },
       {
         title: "Positions",
         href: "/dashboards/positions",
         iconName: "TrendingUp",
       },
-      { title: "Strategy", href: "/dashboards/strategy", iconName: "Bot" },
+      { title: "Vault", href: "/dashboards/vault", iconName: "Vault" },
+    ],
+  },
+  {
+    title: "Intelligence",
+    items: [
+      {
+        title: "Liquidation Heatmap",
+        href: "/dashboards/liquidations",
+        iconName: "Flame",
+      },
+      {
+        title: "Whale Tracker",
+        href: "/dashboards/whales",
+        iconName: "Eye",
+      },
+      {
+        title: "Market Regime",
+        href: "/dashboards/regime",
+        iconName: "Activity",
+      },
+    ],
+  },
+  {
+    title: "Lab",
+    items: [
+      {
+        title: "Backtesting",
+        href: "/dashboards/backtest",
+        iconName: "FlaskConical",
+      },
+      {
+        title: "RBI Agent",
+        href: "/dashboards/rbi",
+        iconName: "Brain",
+      },
+      {
+        title: "Fee Calculator",
+        href: "/dashboards/fees",
+        iconName: "Calculator",
+      },
     ],
   },
   {
@@ -38,27 +83,10 @@ export const navigationsData: NavigationType[] = [
         iconName: "Settings2",
       },
       {
-        title: "Security",
-        href: "/pages/account/settings/security",
-        iconName: "Shield",
-      },
-      {
         title: "Billing",
         href: "/pages/account/settings/plan-and-billing",
         iconName: "CreditCard",
       },
-      {
-        title: "Notification Settings",
-        href: "/pages/account/settings/notifications",
-        iconName: "Bell",
-      },
-    ],
-  },
-  {
-    title: "Plans",
-    items: [
-      { title: "Pricing", href: "/pages/pricing", iconName: "DollarSign" },
-      { title: "Deposit", href: "/pages/payment", iconName: "Wallet" },
     ],
   },
 ]

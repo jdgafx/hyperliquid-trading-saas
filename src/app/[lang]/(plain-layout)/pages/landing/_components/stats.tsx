@@ -1,12 +1,12 @@
 "use client"
 
-import { Activity, DollarSign, TrendingUp, Users } from "lucide-react"
+import { Activity, Bot, DollarSign, TrendingUp } from "lucide-react"
 
 const stats = [
-  { icon: Users, value: "2,500+", label: "Active Traders" },
-  { icon: DollarSign, value: "$12.4M+", label: "Total Volume" },
+  { icon: Bot, value: "24", label: "Trading Strategies" },
   { icon: Activity, value: "99.9%", label: "Uptime" },
-  { icon: TrendingUp, value: "24.5%", label: "Avg. Returns" },
+  { icon: DollarSign, value: "$0.25", label: "Min. Investment" },
+  { icon: TrendingUp, value: "3", label: "Market Regimes Tracked" },
 ]
 
 export function Stats() {

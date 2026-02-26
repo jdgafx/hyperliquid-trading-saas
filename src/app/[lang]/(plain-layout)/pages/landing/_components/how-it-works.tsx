@@ -6,22 +6,23 @@ const steps = [
   {
     number: "01",
     icon: Wallet,
-    title: "Connect Wallet",
+    title: "Deposit & Configure",
     description:
-      "Link your wallet and deposit as little as $0.25 to start trading.",
+      "Deposit as little as $0.25. Set your risk limits — max drawdown, leverage cap, daily loss limit. The risk controller protects you 24/7.",
   },
   {
     number: "02",
     icon: Bot,
-    title: "Choose Strategy",
+    title: "Deploy Strategies",
     description:
-      "Select from our proven algorithmic strategies or let AI optimize for you.",
+      "Pick from 24 battle-tested strategies or use the RBI Agent to generate new ones from any trading idea. Backtest first, deploy with one click.",
   },
   {
     number: "03",
     icon: TrendingUp,
-    title: "Earn Returns",
-    description: "Watch your portfolio grow with automated trading 24/7.",
+    title: "Compound Your Edge",
+    description:
+      "Strategies auto-trade on Hyperliquid with maker-only execution. Monitor whale positions, liquidation zones, and regime shifts in real-time.",
   },
 ]
 
