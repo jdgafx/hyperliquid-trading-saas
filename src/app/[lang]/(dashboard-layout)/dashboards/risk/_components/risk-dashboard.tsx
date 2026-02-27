@@ -50,10 +50,19 @@ interface RiskEvent {
 
 type RiskStatus = "monitoring" | "warning" | "locked_out" | "inactive"
 
-interface RiskStatusResponse {
+interface RiskApiSnapshot {
   status: RiskStatus
+  account_value: number
+  daily_pnl: number
+  daily_pnl_pct: number
+  margin_usage_pct: number
+  max_position_leverage: number
+  open_positions: number
+}
+
+interface RiskStatusResponse {
   config: RiskConfig
-  snapshot: RiskSnapshot
+  snapshot: RiskApiSnapshot
   recent_events: RiskEvent[]
 }
 
@@ -204,7 +213,7 @@ function fmtTimestamp(iso: string): string {
 // ── Sub-components ──────────────────────────────
 
 function StatusBanner({ status }: { status: RiskStatus }) {
-  const meta = STATUS_META[status]
+  const meta = STATUS_META[status] ?? STATUS_META.inactive
 
   return (
     <div
@@ -644,9 +653,17 @@ export function RiskDashboard() {
   const loadStatus = useCallback(async () => {
     try {
       const data = await fetchRiskStatus()
-      setStatus(data.status)
+      const apiSnapshot = data.snapshot
+      setStatus(apiSnapshot.status ?? "inactive")
       setConfig(data.config)
-      setSnapshot(data.snapshot)
+      setSnapshot({
+        account_value: apiSnapshot.account_value,
+        daily_pnl: apiSnapshot.daily_pnl,
+        daily_pnl_pct: apiSnapshot.daily_pnl_pct,
+        margin_usage_pct: apiSnapshot.margin_usage_pct,
+        current_leverage: apiSnapshot.max_position_leverage ?? 0,
+        open_positions: apiSnapshot.open_positions,
+      })
       setEvents(data.recent_events)
       setConnected(true)
       setError("")

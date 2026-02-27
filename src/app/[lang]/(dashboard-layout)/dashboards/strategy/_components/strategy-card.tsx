@@ -157,8 +157,9 @@ export function StrategyCard({
   const [error, setError] = useState("")
 
   const cat = CATEGORY_STYLES[strategy.category] ?? CATEGORY_STYLES.statistical
-  const risk = RISK_STYLES[strategy.riskLevel]
-  const horizon = HORIZON_STYLES[strategy.profitHorizon]
+  const risk = RISK_STYLES[strategy.riskLevel] ?? RISK_STYLES.medium
+  const horizon =
+    HORIZON_STYLES[strategy.profitHorizon] ?? HORIZON_STYLES["medium-term"]
   const paramEntries = Object.entries(strategy.params)
 
   async function handleStart() {
