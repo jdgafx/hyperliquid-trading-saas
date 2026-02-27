@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 
 import { api } from "@/lib/api-client"
+
 import { Badge } from "@/components/ui/badge"
 import {
   Select,
@@ -99,21 +100,24 @@ export function TradingModeSelector() {
           </div>
         </SelectTrigger>
         <SelectContent>
-          {(Object.entries(MODE_CONFIG) as [TradingMode, (typeof MODE_CONFIG)[TradingMode]][]).map(
-            ([key, cfg]) => (
-              <SelectItem key={key} value={key}>
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
-                    <span className="font-medium">{cfg.label}</span>
-                  </div>
-                  <span className="text-muted-foreground text-[10px]">
-                    {cfg.description}
-                  </span>
+          {(
+            Object.entries(MODE_CONFIG) as [
+              TradingMode,
+              (typeof MODE_CONFIG)[TradingMode],
+            ][]
+          ).map(([key, cfg]) => (
+            <SelectItem key={key} value={key}>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
+                  <span className="font-medium">{cfg.label}</span>
                 </div>
-              </SelectItem>
-            )
-          )}
+                <span className="text-muted-foreground text-[10px]">
+                  {cfg.description}
+                </span>
+              </div>
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
