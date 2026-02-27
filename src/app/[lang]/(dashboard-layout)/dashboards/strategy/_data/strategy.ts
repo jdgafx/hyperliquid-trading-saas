@@ -1,6 +1,13 @@
 import type { StrategyTypeInfo } from "@/lib/api-client"
 
-export type StrategyTier = "A" | "B" | "C"
+export type StrategyTier = "A" | "B" | "C" | "D"
+
+const TIER_MAP: Record<string, StrategyTier> = {
+  hl_native: "A",
+  bonus_algos: "B",
+  bootcamp_bots: "C",
+  backtested: "D",
+}
 export type StrategyCategory =
   | "trend"
   | "mean-reversion"
@@ -185,6 +192,116 @@ const STRATEGY_META: Record<
     plainDescription:
       "Rides volume-confirmed trend waves. Slower but more reliable signals.",
   },
+  adx: {
+    name: "ADX Trend Strength",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Measures trend strength with directional crossovers. Only trades strong moves.",
+  },
+  macd: {
+    name: "MACD Crossover",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Classic momentum crossover with histogram confirmation and MA trend filter.",
+  },
+  ichimoku: {
+    name: "Ichimoku Cloud",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "long-term",
+    maxProfitRating: 3,
+    returnSpeed: 2,
+    plainDescription:
+      "Full cloud system with TK cross, cloud positioning, and multi-signal confluence.",
+  },
+  elliott_wave: {
+    name: "Elliott Wave",
+    category: "statistical",
+    riskLevel: "high",
+    profitHorizon: "medium-term",
+    maxProfitRating: 4,
+    returnSpeed: 3,
+    plainDescription:
+      "Detects swing wave patterns with Fibonacci retracement validation.",
+  },
+  pivot_lines: {
+    name: "Pivot Points",
+    category: "mean-reversion",
+    riskLevel: "low",
+    profitHorizon: "short-term",
+    maxProfitRating: 2,
+    returnSpeed: 3,
+    plainDescription:
+      "Trades classic pivot support/resistance levels. Simple, reliable entries.",
+  },
+  quarter_theory: {
+    name: "Quarter Theory",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Quarter-point price level breakouts. Catches clean moves at key levels.",
+  },
+  ema_bollinger: {
+    name: "EMA + Bollinger",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Combines EMA crossover trend with Bollinger squeeze entries for confluence.",
+  },
+  grid_fibonacci: {
+    name: "Fibonacci Grid",
+    category: "statistical",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 2,
+    plainDescription:
+      "Grid trading at Fibonacci levels with dynamic recalibration. Automated scaling.",
+  },
+  elliott_pivot: {
+    name: "Elliott + Pivot",
+    category: "statistical",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Combined wave patterns with pivot levels for high-confluence trade entries.",
+  },
+  sma_adx_bb_vol: {
+    name: "Multi-Indicator Combo",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "SMA + ADX + Bollinger + volume confirmation. Maximum signal confluence.",
+  },
+  rsi_vwap: {
+    name: "RSI + VWAP",
+    category: "mean-reversion",
+    riskLevel: "low",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "RSI and VWAP confluence for trend entries. Dual confirmation, lower risk.",
+  },
 }
 
 /**
@@ -205,7 +322,7 @@ export function toStrategyDefinition(
     plainDescription: info.description,
   }
 
-  const tier = (info.tier?.toUpperCase() ?? "C") as StrategyTier
+  const tier = TIER_MAP[info.tier ?? ""] ?? "C"
 
   // Build param defs from default_params
   const params: Record<string, ParamDef> = {}

@@ -12,6 +12,7 @@ const TIER_LABELS: Record<StrategyTier, { label: string; color: string }> = {
   A: { label: "Tier A - HL Native", color: "text-primary" },
   B: { label: "Tier B - Bonus", color: "text-amber-500" },
   C: { label: "Tier C - Bootcamp", color: "text-muted-foreground" },
+  D: { label: "Tier D - Backtested", color: "text-violet-400" },
 }
 
 interface StrategyLayoutProps {
@@ -37,6 +38,7 @@ export function StrategyLayout({
     A: [],
     B: [],
     C: [],
+    D: [],
   }
   for (const s of strategies) {
     const tier = s.tier ?? "C"
@@ -44,7 +46,7 @@ export function StrategyLayout({
     byTier[tier].push(s)
   }
 
-  const tierOrder: StrategyTier[] = ["A", "B", "C"]
+  const tierOrder: StrategyTier[] = ["A", "B", "C", "D"]
 
   return (
     <div className="flex flex-col gap-6">
