@@ -13,12 +13,26 @@ export function VaultEquityChart({ data }: { data: TradingMetric["perDay"] }) {
       className="h-32 w-full rounded-b-md overflow-hidden"
     >
       <AreaChart data={data} margin={{ left: 0, right: 0 }}>
+        <defs>
+          <linearGradient id="sparkGrad-vault" x1="0" y1="0" x2="0" y2="1">
+            <stop
+              offset="0%"
+              stopColor="hsl(var(--chart-1))"
+              stopOpacity={0.4}
+            />
+            <stop
+              offset="100%"
+              stopColor="hsl(var(--chart-1))"
+              stopOpacity={0}
+            />
+          </linearGradient>
+        </defs>
         <Area
           dataKey="value"
-          type="natural"
-          fill="hsl(var(--chart-2))"
-          fillOpacity={0.4}
-          stroke="hsl(var(--chart-2))"
+          type="monotone"
+          fill="url(#sparkGrad-vault)"
+          stroke="hsl(var(--chart-1))"
+          strokeWidth={1.5}
         />
       </AreaChart>
     </ChartContainer>

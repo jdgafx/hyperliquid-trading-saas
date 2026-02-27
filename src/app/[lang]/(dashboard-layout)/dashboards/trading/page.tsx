@@ -97,11 +97,24 @@ export default async function TradingPage() {
   }
 
   return (
-    <section className="container grid gap-4 p-4 md:grid-cols-2">
-      <TradingOverview data={overviewData} />
-      <PortfolioPerformance data={perfData} />
-      <RecentTrades data={trades} />
-      <ActivePositions data={positions} />
+    <section className="page-grid-bg noise-overlay min-h-[calc(100vh-4rem)] p-4 md:p-6">
+      <div className="mx-auto max-w-[1600px] space-y-6 stagger-children">
+        {/* Hero metrics row - full width, 4 cards */}
+        <TradingOverview data={overviewData} />
+
+        {/* Main content: chart takes 2/3, positions take 1/3 */}
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <PortfolioPerformance data={perfData} />
+          </div>
+          <div className="lg:col-span-1">
+            <ActivePositions data={positions} />
+          </div>
+        </div>
+
+        {/* Recent trades - full width bottom section */}
+        <RecentTrades data={trades} />
+      </div>
     </section>
   )
 }
