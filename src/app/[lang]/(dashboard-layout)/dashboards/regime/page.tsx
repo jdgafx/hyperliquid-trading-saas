@@ -46,7 +46,15 @@ async function fetchRegimes(): Promise<RegimeInfo[]> {
       cache: "no-store",
     })
     if (!res.ok) return []
-    return await res.json()
+    const data = await res.json()
+    // API returns "current_regime" but we expect "regime"
+    return data.map(
+      (d: Record<string, unknown>) =>
+        ({
+          ...d,
+          regime: d.current_regime ?? d.regime ?? "UNKNOWN",
+        }) as RegimeInfo
+    )
   } catch {
     return []
   }

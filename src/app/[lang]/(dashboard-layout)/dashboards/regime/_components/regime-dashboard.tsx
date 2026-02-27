@@ -177,7 +177,15 @@ export function RegimeDashboard({
         ),
         fetch(`${API_URL}/regime/strategy-map`).catch(() => null),
       ])
-      if (regimeRes?.ok) setRegimes(await regimeRes.json())
+      if (regimeRes?.ok) {
+        const data = await regimeRes.json()
+        setRegimes(
+          data.map((d: Record<string, unknown>) => ({
+            ...d,
+            regime: d.current_regime ?? d.regime ?? "UNKNOWN",
+          }))
+        )
+      }
       if (volRes?.ok) setVolatility(await volRes.json())
       if (mapRes?.ok) setStrategyMap(await mapRes.json())
     } catch {
