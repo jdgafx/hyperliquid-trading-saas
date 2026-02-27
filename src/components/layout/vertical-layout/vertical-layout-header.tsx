@@ -5,6 +5,7 @@ import type { DictionaryType } from "@/lib/get-dictionary"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { FullscreenToggle } from "@/components/layout/full-screen-toggle"
 import { ModeDropdown } from "@/components/mode-dropdown"
+import { TradingModeSelector } from "@/components/trading-mode-selector"
 import { ToggleMobileSidebar } from "../toggle-mobile-sidebar"
 
 export function VerticalLayoutHeader({
@@ -16,8 +17,9 @@ export function VerticalLayoutHeader({
     <header className="sticky top-0 z-50 w-full bg-background border-b border-sidebar-border">
       <div className="container flex h-14 justify-between items-center gap-4">
         <ToggleMobileSidebar />
-        <div className="grow flex justify-end gap-2">
+        <div className="grow flex justify-end gap-2 items-center">
           <SidebarTrigger className="hidden lg:flex lg:me-auto" />
+          <TradingModeSelector />
           <FullscreenToggle />
           <ModeDropdown dictionary={dictionary} />
         </div>

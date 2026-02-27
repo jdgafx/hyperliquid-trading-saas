@@ -498,6 +498,24 @@ export const api = {
       }
     ),
 
+  // ── Trading Mode ─────────────────────────────
+  getTradingMode: () =>
+    fetchAPI<{
+      mode: string
+      available_modes: string[]
+      stats?: Record<string, unknown>
+    }>("/trading-mode"),
+  setTradingMode: (mode: string) =>
+    fetchAPI<{
+      status: string
+      mode: string
+      previous_mode: string
+      message: string
+    }>("/trading-mode", {
+      method: "POST",
+      body: JSON.stringify({ mode }),
+    }),
+
   // ── Dashboard ──────────────────────────────
   getDashboardStats: () => fetchAPI<DashboardStats>("/dashboard/stats"),
 
