@@ -1,5 +1,14 @@
-import { ArrowUpDown, TrendingUp, Vault, Wallet } from "lucide-react"
+import {
+  ArrowUpDown,
+  BarChart3,
+  Bot,
+  Target,
+  TrendingUp,
+  Vault,
+  Wallet,
+} from "lucide-react"
 
+import type { DashboardStats } from "@/lib/api-client"
 import type { TradingOverviewData } from "../../types"
 
 import { cn } from "@/lib/utils"
@@ -100,40 +109,106 @@ function MetricCard({
   )
 }
 
-export function TradingOverview({ data }: { data: TradingOverviewData }) {
+interface QuickStatProps {
+  label: string
+  value: string | number
+  icon: React.ElementType
+  valueColor?: string
+}
+
+function QuickStat({ label, value, icon: Icon, valueColor }: QuickStatProps) {
+  return (
+    <div className="flex items-center gap-2.5 rounded-lg border border-border/40 bg-card/60 px-3 py-2 backdrop-blur-sm">
+      <Icon className="size-3.5 text-muted-foreground" />
+      <div>
+        <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+          {label}
+        </p>
+        <p className={cn("text-sm font-bold font-data", valueColor)}>{value}</p>
+      </div>
+    </div>
+  )
+}
+
+interface TradingOverviewProps {
+  data: TradingOverviewData
+  stats?: DashboardStats | null
+}
+
+export function TradingOverview({ data, stats }: TradingOverviewProps) {
   const unrealizedVariant = data.unrealizedPnl.value >= 0 ? "profit" : "loss"
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <MetricCard
-        title="Vault Equity"
-        value={formatCurrency(data.vaultEquity.value)}
-        change={data.vaultEquity.percentageChange}
-        icon={Vault}
-        chart={<VaultEquityChart data={data.vaultEquity.perDay} />}
-      />
-      <MetricCard
-        title="NAV / Share"
-        value={formatNumber(data.navPerShare.value)}
-        change={data.navPerShare.percentageChange}
-        icon={TrendingUp}
-        chart={<NavPerShareChart data={data.navPerShare.perDay} />}
-      />
-      <MetricCard
-        title="Portfolio"
-        value={formatCurrency(data.portfolioValue.value)}
-        change={data.portfolioValue.percentageChange}
-        icon={Wallet}
-        chart={<PortfolioValueChart data={data.portfolioValue.perDay} />}
-      />
-      <MetricCard
-        title="Unrealized P&L"
-        value={formatCurrency(data.unrealizedPnl.value)}
-        change={data.unrealizedPnl.percentageChange}
-        icon={ArrowUpDown}
-        chart={<UnrealizedPnlChart data={data.unrealizedPnl.perDay} />}
-        variant={unrealizedVariant}
-      />
+    <div className="space-y-3">
+      {/* Main metric cards */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard
+          title="Vault Equity"
+          value={formatCurrency(data.vaultEquity.value)}
+          change={data.vaultEquity.percentageChange}
+          icon={Vault}
+          chart={<VaultEquityChart data={data.vaultEquity.perDay} />}
+        />
+        <MetricCard
+          title="NAV / Share"
+          value={formatNumber(data.navPerShare.value)}
+          change={data.navPerShare.percentageChange}
+          icon={TrendingUp}
+          chart={<NavPerShareChart data={data.navPerShare.perDay} />}
+        />
+        <MetricCard
+          title="Portfolio"
+          value={formatCurrency(data.portfolioValue.value)}
+          change={data.portfolioValue.percentageChange}
+          icon={Wallet}
+          chart={<PortfolioValueChart data={data.portfolioValue.perDay} />}
+        />
+        <MetricCard
+          title="Unrealized P&L"
+          value={formatCurrency(data.unrealizedPnl.value)}
+          change={data.unrealizedPnl.percentageChange}
+          icon={ArrowUpDown}
+          chart={<UnrealizedPnlChart data={data.unrealizedPnl.perDay} />}
+          variant={unrealizedVariant}
+        />
+      </div>
+
+      {/* Quick stats row (from dashboard API) */}
+      {stats && (
+        <div className="flex flex-wrap gap-2">
+          <QuickStat
+            label="Strategies"
+            value={`${stats.running_strategies}/${stats.total_strategies}`}
+            icon={Bot}
+            valueColor="text-primary"
+          />
+          <QuickStat
+            label="Total Trades"
+            value={stats.total_trades}
+            icon={BarChart3}
+          />
+          <QuickStat
+            label="Win Rate"
+            value={`${(stats.win_rate * 100).toFixed(1)}%`}
+            icon={Target}
+            valueColor={
+              stats.win_rate >= 0.5 ? "text-success" : "text-destructive"
+            }
+          />
+          <QuickStat
+            label="Total P&L"
+            value={formatCurrency(stats.total_pnl)}
+            icon={TrendingUp}
+            valueColor={
+              stats.total_pnl > 0
+                ? "text-success"
+                : stats.total_pnl < 0
+                  ? "text-destructive"
+                  : undefined
+            }
+          />
+        </div>
+      )}
     </div>
   )
 }

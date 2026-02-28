@@ -98,9 +98,19 @@ export default async function TradingPage() {
 
   return (
     <section className="page-grid-bg noise-overlay min-h-[calc(100vh-4rem)] p-4 md:p-6">
-      <div className="mx-auto max-w-[1600px] space-y-6 stagger-children">
-        {/* Hero metrics row - full width, 4 cards */}
-        <TradingOverview data={overviewData} />
+      <div className="mx-auto max-w-[1600px] space-y-5 stagger-children">
+        {/* Page header */}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Trading Overview
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Real-time portfolio performance, positions, and trade activity.
+          </p>
+        </div>
+
+        {/* Hero metrics row - full width, 4 cards + quick stats */}
+        <TradingOverview data={overviewData} stats={dashboardStats} />
 
         {/* Main content: chart takes 2/3, positions take 1/3 */}
         <div className="grid gap-4 lg:grid-cols-3">

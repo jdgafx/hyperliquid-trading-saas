@@ -8,6 +8,7 @@
   NEXT_PUBLIC_API_URL = "https://api-production-1302.up.railway.app"
   NEXTAUTH_URL = "https://open-algotrade-v3.netlify.app"
   NEXTAUTH_SECRET = "open-algotrade-v3-secret-key"
+  DATABASE_URL = "file:./prisma/dev.db"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

@@ -10,9 +10,9 @@ export const navigationsData: NavigationType[] = [
         iconName: "ChartCandlestick",
       },
       {
-        title: "Risk Controller",
-        href: "/dashboards/risk",
-        iconName: "ShieldAlert",
+        title: "Portfolio",
+        href: "/dashboards/portfolio",
+        iconName: "ChartPie",
       },
       { title: "Strategies", href: "/dashboards/strategy", iconName: "Bot" },
       {
@@ -20,7 +20,22 @@ export const navigationsData: NavigationType[] = [
         href: "/dashboards/positions",
         iconName: "TrendingUp",
       },
+      {
+        title: "Risk Controller",
+        href: "/dashboards/risk",
+        iconName: "ShieldAlert",
+      },
       { title: "Vault", href: "/dashboards/vault", iconName: "Vault" },
+    ],
+  },
+  {
+    title: "Solana",
+    items: [
+      {
+        title: "Sniper",
+        href: "/dashboards/solana-sniper",
+        iconName: "Crosshair",
+      },
     ],
   },
   {

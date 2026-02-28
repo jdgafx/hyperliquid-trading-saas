@@ -9,7 +9,7 @@ import { api } from "@/lib/api-client"
 import { StrategyLayout } from "./_components/strategy-layout"
 
 export const metadata: Metadata = {
-  title: "Strategy",
+  title: "Trading Strategies",
 }
 
 export const dynamic = "force-dynamic"
@@ -34,20 +34,22 @@ export default async function StrategyPage() {
   }
 
   return (
-    <section className="container p-4 md:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">
-          Trading Strategies
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Deploy and manage algorithmic strategies on Hyperliquid perpetual
-          markets.
-        </p>
+    <section className="page-grid-bg noise-overlay min-h-[calc(100vh-4rem)] p-4 md:p-6">
+      <div className="mx-auto max-w-[1800px] space-y-5 stagger-children">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Trading Strategies
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Deploy and manage {strategies.length} algorithmic strategies on
+            Hyperliquid perpetual markets.
+          </p>
+        </div>
+        <StrategyLayout
+          strategies={strategies}
+          runningInstances={runningInstances}
+        />
       </div>
-      <StrategyLayout
-        strategies={strategies}
-        runningInstances={runningInstances}
-      />
     </section>
   )
 }
