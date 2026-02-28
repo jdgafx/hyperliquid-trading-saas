@@ -1,12 +1,13 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   ArrowDownAZ,
   ArrowUpDown,
   Bot,
   Grid3X3,
   LayoutList,
+  RefreshCw,
   Search,
   SlidersHorizontal,
   Trophy,
@@ -19,6 +20,7 @@ import type {
   StrategyTier,
 } from "../_data/strategy"
 
+import { api } from "@/lib/api-client"
 import { cn } from "@/lib/utils"
 
 import { Badge } from "@/components/ui/badge"
@@ -80,7 +82,7 @@ interface StrategyLayoutProps {
 
 export function StrategyLayout({
   strategies,
-  runningInstances,
+  runningInstances: initialInstances,
 }: StrategyLayoutProps) {
   const [selectedPair, setSelectedPair] = useState("BTC")
   const [search, setSearch] = useState("")
@@ -90,6 +92,26 @@ export function StrategyLayout({
   const [filterStatus, setFilterStatus] = useState<string>("all")
   const [sortKey, setSortKey] = useState<SortKey>("tier")
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
+  const [liveInstances, setLiveInstances] = useState<StrategyInstance[]>(initialInstances)
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+
+  // Auto-refresh strategy instances every 10 seconds
+  const refreshInstances = useCallback(async () => {
+    try {
+      const instances = await api.getStrategies()
+      setLiveInstances(instances)
+      setLastRefresh(new Date())
+    } catch {
+      // Silently fail — keep last known data
+    }
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(refreshInstances, 10_000)
+    return () => clearInterval(interval)
+  }, [refreshInstances])
+
+  const runningInstances = liveInstances
 
   // Build maps for quick lookup
   const instanceMap = useMemo(() => {
@@ -404,9 +426,13 @@ export function StrategyLayout({
             </SelectContent>
           </Select>
 
-          {/* Results count */}
-          <span className="ml-auto text-xs text-muted-foreground">
-            {filtered.length} of {strategies.length}
+          {/* Results count + live refresh */}
+          <span className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
+            <button onClick={refreshInstances} className="flex items-center gap-1 hover:text-foreground transition-colors" title="Refresh data">
+              <RefreshCw className="size-3" />
+              <span className="hidden sm:inline">{lastRefresh.toLocaleTimeString()}</span>
+            </button>
+            <span>{filtered.length} of {strategies.length}</span>
           </span>
         </div>
       </div>
