@@ -59,12 +59,12 @@ const CATEGORY_STYLES: Record<
   "market-making": {
     label: "MM",
     icon: "=",
-    textColor: "text-amber-400",
-    badgeBg: "bg-amber-500/10",
-    badgeBorder: "border-amber-500/20",
-    iconBg: "bg-amber-500/10",
-    borderLeft: "border-l-amber-500",
-    gradient: "from-amber-500/5 to-transparent",
+    textColor: "text-yellow-400",
+    badgeBg: "bg-yellow-500/10",
+    badgeBorder: "border-yellow-500/20",
+    iconBg: "bg-yellow-500/10",
+    borderLeft: "border-l-yellow-500",
+    gradient: "from-yellow-500/5 to-transparent",
   },
   statistical: {
     label: "Stats",
@@ -79,12 +79,12 @@ const CATEGORY_STYLES: Record<
   arbitrage: {
     label: "Arb",
     icon: "A",
-    textColor: "text-rose-400",
-    badgeBg: "bg-rose-500/10",
-    badgeBorder: "border-rose-500/20",
-    iconBg: "bg-rose-500/10",
-    borderLeft: "border-l-rose-500",
-    gradient: "from-rose-500/5 to-transparent",
+    textColor: "text-red-400",
+    badgeBg: "bg-red-500/10",
+    badgeBorder: "border-red-500/20",
+    iconBg: "bg-red-500/10",
+    borderLeft: "border-l-red-500",
+    gradient: "from-red-500/5 to-transparent",
   },
 }
 

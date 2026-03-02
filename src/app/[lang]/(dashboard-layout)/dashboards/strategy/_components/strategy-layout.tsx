@@ -92,7 +92,8 @@ export function StrategyLayout({
   const [filterStatus, setFilterStatus] = useState<string>("all")
   const [sortKey, setSortKey] = useState<SortKey>("tier")
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
-  const [liveInstances, setLiveInstances] = useState<StrategyInstance[]>(initialInstances)
+  const [liveInstances, setLiveInstances] =
+    useState<StrategyInstance[]>(initialInstances)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
 
   // Auto-refresh strategy instances every 10 seconds
@@ -428,11 +429,19 @@ export function StrategyLayout({
 
           {/* Results count + live refresh */}
           <span className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-            <button onClick={refreshInstances} className="flex items-center gap-1 hover:text-foreground transition-colors" title="Refresh data">
+            <button
+              onClick={refreshInstances}
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
+              title="Refresh data"
+            >
               <RefreshCw className="size-3" />
-              <span className="hidden sm:inline">{lastRefresh.toLocaleTimeString()}</span>
+              <span className="hidden sm:inline">
+                {lastRefresh.toLocaleTimeString()}
+              </span>
             </button>
-            <span>{filtered.length} of {strategies.length}</span>
+            <span>
+              {filtered.length} of {strategies.length}
+            </span>
           </span>
         </div>
       </div>

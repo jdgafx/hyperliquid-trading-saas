@@ -1,0 +1,1101 @@
+[2026-02-28T07:53:11.900Z] PROMPT
+============================================================
+Analyze test coverage and identify gaps:
+- Find untested functions and classes
+- Identify edge cases not covered
+- Suggest new test scenarios
+- Check for missing error handling tests
+- Identify integration test gaps
+
+For each gap, provide a test skeleton.
+
+## Codebase Context
+
+--- src/app/(unlocalized)/docs/_data/sidebar-navigation.ts ---
+import type { NavigationType } from "@/types"
+
+export const sidebarNavigationData: NavigationType[] = [
+  {
+    title: "Overview",
+    items: [
+      {
+        title: "Introduction",
+        href: "/docs/overview/introduction",
+        iconName: "Play",
+      },
+      {
+        title: "Kits",
+        href: "/docs/overview/kits",
+        iconName: "Folders",
+      },
+      {
+        title: "Installation",
+        href: "/docs/overview/installation",
+        iconName: "ArrowDownToLine",
+      },
+      {
+        title: "Deployment",
+        href: "/docs/overview/deployment",
+        iconName: "ArrowUpToLine",
+      },
+    ],
+  },
+  {
+    title: "Development",
+    items: [
+      {
+        title: "Authentication",
+        href: "/docs/development/authentication",
+        iconName: "Lock",
+      },
+      {
+        title: "Internationalization (I18n)",
+        href: "/docs/development/i18n",
+        iconName: "Languages",
+      },
+      {
+        title: "Navigation",
+        href: "/docs/development/navigation",
+        iconName: "Menu",
+      },
+
+      {
+        title: "Theme Color",
+        href: "/docs/development/theme-color",
+        iconName: "SwatchBook",
+      },
+    ],
+  },
+  {
+    title: "Miscellaneous",
+    items: [
+      {
+        title: "Sources & Credits",
+        href: "/docs/miscellaneous/sources-and-credits",
+        iconName: "LibraryBig",
+      },
+    ],
+  },
+]
+
+
+--- src/app/(unlocalized)/docs/miscellaneous/sources-and-credits/_data/sources-and-credits.ts (truncated) ---
+export const sourcesAndCreditsData = [
+  {
+    name: "@auth/prisma-adapter",
+    url: "https://github.com/nextauthjs/next-auth",
+    license: "ISC",
+  },
+  {
+    name: "@commitlint/cli",
+    url: "https://github.com/conventional-changelog/commitlint",
+    license: "MIT",
+  },
+  {
+    name: "@commitlint/config-conventional",
+    url: "https://github.com/conventional-changelog/commitlint",
+    license: "MIT",
+  },
+  {
+    name: "@eslint/compat",
+    url: "https://github.com/eslint/rewrite",
+    license: "Apache-2.0",
+  },
+  {
+    name: "@formatjs/intl-localematcher",
+    url: "https://github.com/formatjs/formatjs",
+    license: "MIT",
+  },
+  {
+    name: "@fullcalendar/core",
+    url: "https://github.com/fullcalendar/fullcalendar",
+    license: "MIT",
+  },
+  {
+    name: "@hello-pangea/dnd",
+    url: "https://github.com/hello-pangea/dnd",
+    license: "MIT",
+  },
+  {
+    name: "@hookform/resolvers",
+    url: "https://github.com/react-hook-form/resolvers",
+    license: "MIT",
+  },
+  {
+    name: "@ianvs/prettier-plugin-sort-imports",
+    url: "https://github.com/ianvs/prettier-plugin-sort-imports",
+    license: "Apache-2.0",
+  },
+  {
+    name: "@mdx-js/loader",
+    url: "https://github.com/mdx-js/mdx",
+    license: "MIT",
+  },
+  {
+    name: "@mdx-js/react",
+    url: "https://github.com/mdx-js/mdx",
+    license: "MIT",
+  },
+  {
+    name: "@prisma/client",
+    url: "https://github.com/prisma/prisma",
+    license: "Apache-2.0",
+  },
+  {
+    name: "@radix-ui/react-accessible-icon",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-accordion",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-alert-dialog",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-aspect-ratio",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-avatar",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-checkbox",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-collapsible",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-context-menu",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-dialog",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-direction",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-dropdown-menu",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-hover-card",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-label",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-menubar",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-navigation-menu",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-popover",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-progress",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-radio-group",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-scroll-area",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-select",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-separator",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-slider",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-slot",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-switch",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-tabs",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-toast",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-toggle",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-toggle-group",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@radix-ui/react-tooltip",
+    url: "https://github.com/radix-ui/primitives",
+    license: "MIT",
+  },
+  {
+    name: "@semantic-release/github",
+    url: "https://github.com/semantic-release/github",
+    license: 
+
+--- src/app/(unlocalized)/docs/types.ts ---
+export interface DocNav {
+  title: string
+  items?: DocNav[]
+  href?: string
+}
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/colors/_data/basic-colors.ts ---
+export const basicColorsData = [
+  {
+    label: "Background",
+    class: "bg-background",
+  },
+  {
+    label: "Foreground",
+    class: "bg-foreground",
+  },
+  {
+    label: "Card",
+    class: "bg-card",
+  },
+  {
+    label: "Card Foreground",
+    class: "bg-card-foreground",
+  },
+  {
+    label: "Popover",
+    class: "bg-popover",
+  },
+  {
+    label: "Popover Foreground",
+    class: "bg-popover-foreground",
+  },
+  {
+    label: "Primary",
+    class: "bg-primary",
+  },
+  {
+    label: "Primary foreground",
+    class: "bg-primary-foreground",
+  },
+  {
+    label: "Secondary",
+    class: "bg-secondary",
+  },
+  {
+    label: "Secondary Foreground",
+    class: "bg-secondary-foreground",
+  },
+  {
+    label: "Muted",
+    class: "bg-muted",
+  },
+  {
+    label: "Muted Foreground",
+    class: "bg-muted-foreground",
+  },
+  {
+    label: "Accent",
+    class: "bg-accent",
+  },
+  {
+    label: "Accent Foreground",
+    class: "bg-accent-foreground",
+  },
+  {
+    label: "Destructive",
+    class: "bg-destructive",
+  },
+  {
+    label: "Destructive Foreground",
+    class: "bg-destructive-foreground",
+  },
+  {
+    label: "Success",
+    class: "bg-success",
+  },
+  {
+    label: "Success Foreground",
+    class: "bg-success-foreground",
+  },
+  {
+    label: "Sidebar Background",
+    class: "bg-sidebar-background",
+  },
+  {
+    label: "Sidebar Foreground",
+    class: "bg-sidebar-foreground",
+  },
+  {
+    label: "Sidebar Primary",
+    class: "bg-sidebar-primary",
+  },
+  {
+    label: "Sidebar Primary Foreground",
+    class: "bg-sidebar-primary-foreground",
+  },
+  {
+    label: "Sidebar Accent",
+    class: "bg-sidebar-accent",
+  },
+  {
+    label: "Sidebar Accent Foreground",
+    class: "bg-sidebar-accent-foreground",
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/colors/_data/borders-and-rings.ts ---
+export const bordersAndRingsData = [
+  {
+    label: "Border",
+    class: "border-2 border-border",
+  },
+  {
+    label: "Input",
+    class: "border-2 border-input",
+  },
+  {
+    label: "Ring",
+    class: "border-2 border-ring",
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/colors/_data/chart-colors.ts ---
+export const chartColorsData = [
+  {
+    label: "Chart 1",
+    class: "bg-chart-1",
+  },
+  {
+    label: "Chart 2",
+    class: "bg-chart-2",
+  },
+  {
+    label: "Chart 3",
+    class: "bg-chart-3",
+  },
+  {
+    label: "Chart 4",
+    class: "bg-chart-4",
+  },
+  {
+    label: "Chart 5",
+    class: "bg-chart-5",
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/extended-ui/avatar-stack/_data/avatars.ts ---
+export const avatarsData = [
+  { src: "/images/avatars/female-01.svg", alt: "Emily Smith", href: "" },
+  { src: "/images/avatars/female-02.svg", alt: "Sarah Johnson", href: "" },
+  { src: "/images/avatars/female-03.svg", alt: "Olivia Martinez", href: "" },
+  { src: "/images/avatars/male-01.svg", alt: "John Doe", href: "" },
+  { src: "/images/avatars/male-02.svg", alt: "Michael Brown", href: "" },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/extended-ui/input-tags/_data/suggestions.ts ---
+export const suggestionsData = [
+  "React",
+  "TypeScript",
+  "JavaScript",
+  "Next.js",
+  "Node.js",
+  "TailwindCSS",
+  "CSS",
+  "HTML",
+  "Git",
+  "GitHub",
+  "VS Code",
+  "Python",
+  "Java",
+  "C++",
+  "Ruby",
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/forms/form-layouts/_schemas/form-layouts-schema.ts ---
+import { z } from "zod"
+
+export const FormLayoutsSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(2, { message: "First Name must contain at least 2 characters." })
+    .max(50, { message: "First Name must contain at most 50 characters." }),
+  lastName: z
+    .string()
+    .trim()
+    .min(2, { message: "Last Name must contain at least 2 characters." })
+    .max(50, { message: "Last Name must contain at most 50 characters." }),
+  username: z
+    .string()
+    .toLowerCase()
+    .trim()
+    .min(3, { message: "Username must contain at least 3 characters." })
+    .max(50, { message: "Username must contain at most 50 characters." }),
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .toLowerCase()
+    .trim(),
+  phoneNumber: z
+    .string()
+    .min(10, { message: "Phone Number must contain at least 10 digits." })
+    .max(15, { message: "Username must contain at most 15 digits." }),
+  state: z
+    .string()
+    .trim()
+    .min(2, { message: "State must contain at least 2 characters." })
+    .max(50, { message: "State must contain at most 50 characters." }),
+  country: z
+    .string()
+    .trim()
+    .min(2, { message: "Country must contain at least 2 characters." })
+    .max(56, { message: "Country must contain at most 56 characters." }),
+  address: z
+    .string()
+    .trim()
+    .min(2, { message: "Address must contain at least 2 characters." })
+    .max(100, { message: "Address must contain at most 100 characters." }),
+})
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/icons/types.ts ---
+import type { IconType as IconElementType } from "@/types"
+
+export interface IconType {
+  icon: IconElementType
+  name: string
+}
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/tables/_data/invoices.ts ---
+import type { InvoiceType } from "../types"
+
+export const invoicesData: InvoiceType[] = [
+  { id: "INV001", status: "Paid", method: "Credit Card", amount: "$250.00" },
+  { id: "INV002", status: "Pending", method: "PayPal", amount: "$150.00" },
+  {
+    id: "INV003",
+    status: "Overdue",
+    method: "Bank Transfer",
+    amount: "$300.00",
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/tables/types.ts ---
+export interface InvoiceType {
+  id: string
+  status: string
+  method: string
+  amount: `$${string}`
+}
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/typography/_data/font-families.ts ---
+export const fontFamiliesData = [
+  {
+    name: "Cairo",
+    class: "font-cairo",
+    language: "Arabic",
+    example: "مرحبا بالعالم",
+  },
+  {
+    name: "Lato",
+    class: "font-lato",
+    language: "English",
+    example: "Hello World",
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/(design-system)/typography/_data/text-styles.ts ---
+export const textStylesData = [
+  {
+    name: "H1 (Page Title)",
+    class: "text-4xl font-black",
+    usage: "Main page or section title",
+  },
+  {
+    name: "H2",
+    class: "text-3xl font-semibold",
+    usage: "Section headings",
+  },
+  {
+    name: "H3",
+    class: "text-2xl font-semibold",
+    usage: "Subsection headings",
+  },
+  {
+    name: "H4",
+    class: "text-xl font-semibold",
+    usage: "Tertiary titles or smaller headings",
+  },
+  {
+    name: "Lead",
+    class: "text-sm text-muted-foreground font-normal",
+    usage: "Subtle introductory or supporting text",
+  },
+  {
+    name: "Large",
+    class: "text-base font-semibold",
+    usage: "For larger body text or highlighted content",
+  },
+  {
+    name: "Normal",
+    class: "text-sm font-normal",
+    usage: "Standard paragraph or body text",
+  },
+  {
+    name: "Small",
+    class: "text-xs font-normal",
+    usage: "For fine print or disclaimers",
+  },
+  {
+    name: "Muted",
+    class: "text-sm text-muted-foreground font-normal",
+    usage: "Secondary or less emphasized text",
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/apps/calendar/_data/categories.ts ---
+export const categoriesData = [
+  "Business",
+  "Personal",
+  "Family",
+  "Holiday",
+  "Health",
+  "Miscellaneous",
+] as const
+
+
+--- src/app/[lang]/(dashboard-layout)/apps/calendar/_data/events.ts ---
+import type { EventType } from "../types"
+
+export const eventsData: EventType[] = [
+  {
+    id: "1",
+    title: "Team Meeting",
+    allDay: true,
+    start: new Date(new Date().setDate(new Date().getDate())),
+    end: new Date(new Date().setDate(new Date().getDate())),
+    extendedProps: {
+      category: "Business",
+      description: "Discuss project updates.",
+    },
+  },
+  {
+    id: "2",
+    title: "Doctor Appointment",
+    allDay: true,
+    start: new Date(new Date().setDate(new Date().getDate() + 5)),
+    end: new Date(new Date().setDate(new Date().getDate() + 5)),
+    extendedProps: {
+      category: "Health",
+      description: "Annual check-up.",
+    },
+  },
+  {
+    id: "3",
+    title: "Birthday Party",
+    allDay: true,
+    start: new Date(new Date().setDate(new Date().getDate() - 10)),
+    end: new Date(new Date().setDate(new Date().getDate() - 10)),
+    extendedProps: {
+      category: "Family",
+      description: "Celebrating John’s birthday.",
+    },
+  },
+  {
+    id: "4",
+    title: "Project Deadline",
+    allDay: true,
+    start: new Date(new Date().setDate(new Date().getDate() + 15)),
+    end: new Date(new Date().setDate(new Date().getDate() + 15)),
+    extendedProps: {
+      category: "Business",
+      description: "Final submission for the project.",
+    },
+  },
+  {
+    id: "5",
+    title: "Weekend Getaway",
+    allDay: true,
+    start: new Date(new Date().setDate(new Date().getDate() - 5)),
+    end: new Date(new Date().setDate(new Date().getDate() - 3)),
+    extendedProps: {
+      category: "Holiday",
+      description: "Relaxing at the beach.",
+    },
+  },
+  {
+    id: "6",
+    title: "Family Reunion",
+    allDay: true,
+    start: new Date(new Date().setDate(new Date().getDate() + 25)),
+    end: new Date(new Date().setDate(new Date().getDate() + 25)),
+    extendedProps: {
+      category: "Family",
+      description: "Gathering with relatives.",
+    },
+  },
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/apps/calendar/_reducers/calendar-reducer.ts ---
+import type {
+  CalendarActionType,
+  CalendarStateType,
+  CategoryType,
+  EventType,
+} from "../types"
+
+import { CATEGORIES } from "../constants"
+
+export function CalendarReducer(
+  calendarState: CalendarStateType,
+  action: CalendarActionType
+): CalendarStateType {
+  switch (action.type) {
+    case "addEvent": {
+      return {
+        ...calendarState,
+        events: [...calendarState.events, action.event as EventType], // Add new event
+      }
+    }
+
+    case "updateEvent": {
+      const events = calendarState.events.map((event) => {
+        // Update event if ID matches, else retain original
+        return event.id === action.event?.id ? action.event : event
+      })
+
+      return {
+        ...calendarState,
+        events, // Update events array
+      }
+    }
+
+    case "deleteEvent": {
+      const events = calendarState.events.filter(
+        (event) => event.id !== action.eventId // Remove event by ID
+      )
+
+      return {
+        ...calendarState,
+        events,
+      }
+    }
+
+    case "selectEvent": {
+      return {
+        ...calendarState,
+        selectedEvent: action.event, // Set selected event
+      }
+    }
+
+    case "selectCategory": {
+      const tempSelectedCategories = [...calendarState.selectedCategories]
+
+      // Toggle category selection
+      const index = tempSelectedCategories.indexOf(
+        action.category as CategoryType
+      )
+      if (index !== -1) {
+        tempSelectedCategories.splice(index, 1) // Remove category if already selected
+      } else {
+        tempSelectedCategories.push(action.category as CategoryType) // Add category if not selected
+      }
+
+      // Filter events based on selected categories
+      const tempSelectedEvents = calendarState.initalEvents.filter((event) =>
+        tempSelectedCategories.includes(
+          event.extendedProps.category as CategoryType
+        )
+      )
+
+      return {
+        ...calendarState,
+        events: tempSelectedEvents,
+        selectedCategories: tempSelectedCategories,
+      }
+    }
+
+    case "selectAllCategories": {
+      let tempSelectedCategories = CATEGORIES
+      let tempEvents = calendarState.initalEvents
+
+      if (!action.isSelectAllCategories) {
+        // Deselect all categories and clear events
+        tempSelectedCategories = []
+        tempEvents = []
+      }
+
+      return {
+        ...calendarState,
+        events: tempEvents,
+        selectedCategories: tempSelectedCategories,
+      }
+    }
+
+    default:
+      return calendarState // Return the current state for unhandled action types
+  }
+}
+
+
+--- src/app/[lang]/(dashboard-layout)/apps/calendar/constants.ts ---
+import type { CategoryType } from "./types"
+
+export const INITIAL_VIEW = "dayGridMonth"
+
+export const CATEGORIES: CategoryType[] = [
+  "Personal",
+  "Business",
+  "Family",
+  "Holiday",
+  "Health",
+  "Miscellaneous",
+]
+
+
+--- src/app/[lang]/(dashboard-layout)/apps/calendar/types.ts ---
+import type { CalendarApi } from "@fullcalendar/core/index.js"
+import type { z } from "zod"
+import type { EventSidebarSchema } from "./_schemas/event-sidebar-schema"
+
+export interface CalendarContextType {
+  calendarState: CalendarStateType
+  calendarApi: CalendarApi | null
+  setCalendarApi: (val: CalendarApi) => void
+  eventSidebarIsOpen: boolean
+  setEventSidebarIsOpen: (val: boolean) => void
+  handleAddEvent: (event: EventWithoutIdType) => void
+  handleUpdateEvent: (event: EventType) => void
+  handleDeleteEvent: (eventId: EventType["id"]) => void
+  handleSelectEvent: (event?: EventType) => void
+  handleSelectCategory: (category: CategoryType) => void
+  handleSelectAllCategories: (isSelectAllCategories: boolean) => void
+}
+
+export type CategoryType =
+  | "Business"
+  | "Personal"
+  | "Family"
+  | "Holiday"
+  | "Health"
+  | "Miscellaneous"
+
+export type EventType = {
+  id: string
+  url?: string
+  title: string
+  allDay: boolean
+  end: Date
+  start: Date
+  extendedProps: {
+    category: CategoryType
+    description?: string
+  }
+}
+
+export type EventWithoutIdType = Omit<EventType, "id">
+
+export type CalendarStateType = {
+  initalEvents: EventType[]
+  events: EventType[]
+  selectedEvent?: EventType
+  selectedCategories: CategoryType[]
+}
+
+export type CalendarActionType = {
+  type:
+    | "addEvent"
+    | "updateEvent"
+    | "deleteEvent"
+    | "selectEvent"
+    | "selectCategory"
+    | "selectAllCategories"
+  event?: EventType
+  category?: CategoryType
+  eventId?: string
+  isSelectAllCategories?: boolean
+}
+
+export type EventSidebarFormType = z.infer<typeof EventSidebarSchema>
+
+
+--- src/app/[lang]/(dashboard-layout)/apps/chat/_data/chats.ts (truncated) ---
+import type { ChatType } from "../types"
+
+export const chatsData: ChatType[] = [
+  {
+    id: "chat_1",
+    lastMessage: {
+      content: "Thank you for the update. I'll review it shortly.",
+      createdAt: new Date("2024-10-31T10:37:00Z"),
+    },
+    name: "Tech Team Discussions",
+    messages: [
+      {
+        id: "msg_24",
+        senderId: "1",
+        text: "Thank you for the update. I'll review it shortly.",
+        createdAt: new Date("2024-10-31T10:37:00Z"),
+        status: "DELIVERED",
+      },
+      {
+        id: "msg_23",
+        senderId: "5",
+        files: [
+          {
+            id: "file_1",
+            name: "Flowchart_Updated.pdf",
+            type: "application/pdf",
+            size: 204800,
+            url: "",
+          },
+        ],
+        createdAt: new Date("2024-10-31T10:34:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_22",
+        senderId: "5",
+        text: "Here's the updated flowchart for review.",
+        files: [
+          {
+            id: "file_1",
+            name: "flowchart-updated",
+            type: "application/pdf",
+            size: 204800,
+            url: "",
+          },
+        ],
+        createdAt: new Date("2024-10-31T10:33:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_21",
+        senderId: "1",
+        text: "Looks good! Do we have an alternative version?",
+        createdAt: new Date("2024-10-31T10:10:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_20",
+        senderId: "5",
+        text: "This mockup might help visualize the design.",
+        createdAt: new Date("2024-10-31T10:08:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_19",
+        senderId: "5",
+        images: [
+          {
+            id: "img_1",
+            name: "mockup-home-page",
+            type: "image/svg",
+            size: 512000,
+            url: "/images/illustrations/misc/whiteboard.svg",
+          },
+        ],
+        createdAt: new Date("2024-10-31T10:07:00Z"),
+        status: "READ",
+      },
+    ],
+    users: [
+      {
+        id: "1",
+        name: "John Doe",
+        avatar: "/images/avatars/male-01.svg",
+        status: "ONLINE",
+      },
+      {
+        id: "5",
+        name: "Sarah Johnson",
+        avatar: "/images/avatars/female-02.svg",
+        status: "ONLINE",
+      },
+    ],
+    typingUsers: [],
+  },
+  {
+    id: "chat_2",
+    lastMessage: {
+      content: "Hello everyone!",
+      createdAt: new Date("2024-10-31T10:03:00Z"),
+    },
+    name: "General Group",
+    messages: [
+      {
+        id: "msg_12",
+        senderId: "2",
+        text: "Pretty good! Just getting started with the day.",
+        createdAt: new Date("2024-10-31T10:03:00Z"),
+        status: "DELIVERED",
+      },
+      {
+        id: "msg_11",
+        senderId: "1",
+        text: "How's everyone doing today?",
+        createdAt: new Date("2024-10-31T10:02:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_2",
+        senderId: "1",
+        text: "Hey Olivia!",
+        createdAt: new Date("2024-10-31T10:01:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_1",
+        senderId: "2",
+        text: "Hello everyone!",
+        createdAt: new Date("2024-10-31T10:00:00Z"),
+        status: "READ",
+      },
+    ],
+    users: [
+      {
+        id: "1",
+        name: "John Doe",
+        avatar: "/images/avatars/male-01.svg",
+        status: "ONLINE",
+      },
+      {
+        id: "2",
+        name: "Olivia Martinez",
+        avatar: "/images/avatars/female-03.svg",
+        status: "IDLE",
+      },
+    ],
+    typingUsers: [],
+    unreadCount: 1,
+  },
+  {
+    id: "chat_3",
+    lastMessage: {
+      content: "Hey, did you see the updates?",
+      createdAt: new Date("2024-10-31T10:08:00Z"),
+    },
+    name: "Olivia Martinez",
+    avatar: "/images/avatars/female-03.svg",
+    status: "IDLE",
+    messages: [
+      {
+        id: "msg_14",
+        senderId: "1",
+        text: "Great! Let's keep it that way.",
+        createdAt: new Date("2024-10-31T10:08:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_13",
+        senderId: "2",
+        text: "They look good! I think we're on track.",
+        createdAt: new Date("2024-10-31T10:07:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_4",
+        senderId: "1",
+        text: "Yes, I checked them this morning.",
+        createdAt: new Date("2024-10-31T10:06:00Z"),
+        status: "READ",
+      },
+      {
+        id: "msg_3",
+        senderId: "2",
+        text: "Hey, did you see the updates?",
+        createdAt: new Date("2024-10-31T10:05:00Z"),
+        status: "READ",
+      },
+    ],
+    users: [
+      {
+        id: "1",
+        name: "John Doe",
+        avatar: "/images/avatars/male-01.svg",
+        status: "ONLINE",
+      },
+      {
+        id: "2",
+        name: "Olivia Martinez",
+        avatar: "/images/avatars/female-03.svg",
+        status: "IDLE",
+      },
+    ],
+    typingUsers: [],
+  },
+  {
+    id: "chat_4",
+    lastMessage: {
+      c
+
+## Instructions
+
+Analyze the above codebase context and provide your response following the format specified in the task.
