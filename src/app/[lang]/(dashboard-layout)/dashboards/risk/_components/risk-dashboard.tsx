@@ -41,11 +41,11 @@ interface RiskSnapshot {
 }
 
 interface RiskEvent {
-  id: string
+  id: number | string
   timestamp: string
   severity: "info" | "warning" | "critical" | "emergency"
   message: string
-  details?: string
+  details?: string | Record<string, unknown>
 }
 
 type RiskStatus = "monitoring" | "warning" | "locked_out" | "inactive"
@@ -332,7 +332,7 @@ function EventLog({ events }: { events: RiskEvent[] }) {
             <div className="space-y-2 pr-4">
               {events.map((event) => (
                 <div
-                  key={event.id}
+                  key={String(event.id)}
                   className="flex items-start gap-3 rounded-md border border-border/50 bg-muted/20 px-3 py-2"
                 >
                   <div className="mt-1.5 flex-shrink-0">
@@ -356,7 +356,11 @@ function EventLog({ events }: { events: RiskEvent[] }) {
                     </p>
                     {event.details && (
                       <p className="mt-0.5 text-xs text-muted-foreground">
-                        {event.details}
+                        {String(
+                          typeof event.details === "string"
+                            ? event.details
+                            : JSON.stringify(event.details)
+                        )}
                       </p>
                     )}
                   </div>
