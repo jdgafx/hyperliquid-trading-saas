@@ -114,14 +114,61 @@ export function StrategyLayout({
 
   const runningInstances = liveInstances
 
-  // Build maps for quick lookup
+  // Build maps for quick lookup — aggregate multiple instances per strategy_type
   const instanceMap = useMemo(() => {
     const map = new Map<string, StrategyInstance>()
+
     for (const inst of runningInstances) {
-      map.set(inst.strategy_type, inst)
+      const key = inst.strategy_type
+      const existing = map.get(key)
+      if (existing) {
+        // Aggregate stats from multiple instances of the same strategy type
+        map.set(key, {
+          ...existing,
+          total_pnl: (existing.total_pnl ?? 0) + (inst.total_pnl ?? 0),
+          total_trades:
+            (existing.total_trades ?? 0) + (inst.total_trades ?? 0),
+          winning_trades:
+            (existing.winning_trades ?? 0) + (inst.winning_trades ?? 0),
+          losing_trades:
+            (existing.losing_trades ?? 0) + (inst.losing_trades ?? 0),
+          status:
+            existing.status === "running" || inst.status === "running"
+              ? "running"
+              : inst.status,
+        })
+      } else {
+        map.set(key, { ...inst })
+      }
     }
     return map
   }, [runningInstances])
+
+  // Helper to find instance data for a strategy definition by id.
+  // Falls back to matching by instance name prefix when strategy_type lookup fails.
+  const getInstanceForStrategy = useCallback(
+    (strategyId: string): StrategyInstance | null => {
+      // Direct lookup by strategy_type
+      const direct = instanceMap.get(strategyId)
+      if (direct) return direct
+
+      // Fallback: check if any instance's name starts with the strategy id
+      // (handles cases where strategy_type format differs from id)
+      const idWithHyphens = strategyId.replace(/_/g, "-")
+      for (const inst of runningInstances) {
+        if (
+          inst.name === strategyId ||
+          inst.name.startsWith(`${strategyId}-`) ||
+          inst.name.startsWith(`${idWithHyphens}-`) ||
+          inst.strategy_type.replace(/-/g, "_") === strategyId
+        ) {
+          return instanceMap.get(inst.strategy_type) ?? inst
+        }
+      }
+      return null
+    },
+    [instanceMap, runningInstances]
+  )
 
   const runningTypes = useMemo(
     () =>
@@ -133,8 +180,10 @@ export function StrategyLayout({
     [runningInstances]
   )
 
-  // Derived stats
-  const totalRunning = runningTypes.size
+  // Derived stats — count individual running instances, not unique types
+  const totalRunning = runningInstances.filter(
+    (i) => i.status === "running"
+  ).length
   const totalPnl = runningInstances.reduce((s, i) => s + (i.total_pnl ?? 0), 0)
   const totalTrades = runningInstances.reduce(
     (s, i) => s + (i.total_trades ?? 0),
@@ -172,13 +221,13 @@ export function StrategyLayout({
         case "name":
           return a.name.localeCompare(b.name)
         case "pnl": {
-          const aPnl = instanceMap.get(a.id)?.total_pnl ?? 0
-          const bPnl = instanceMap.get(b.id)?.total_pnl ?? 0
+          const aPnl = getInstanceForStrategy(a.id)?.total_pnl ?? 0
+          const bPnl = getInstanceForStrategy(b.id)?.total_pnl ?? 0
           return bPnl - aPnl
         }
         case "winRate": {
-          const aInst = instanceMap.get(a.id)
-          const bInst = instanceMap.get(b.id)
+          const aInst = getInstanceForStrategy(a.id)
+          const bInst = getInstanceForStrategy(b.id)
           const aWr =
             aInst && aInst.total_trades > 0
               ? aInst.winning_trades / aInst.total_trades
@@ -190,8 +239,8 @@ export function StrategyLayout({
           return bWr - aWr
         }
         case "trades": {
-          const aT = instanceMap.get(a.id)?.total_trades ?? 0
-          const bT = instanceMap.get(b.id)?.total_trades ?? 0
+          const aT = getInstanceForStrategy(a.id)?.total_trades ?? 0
+          const bT = getInstanceForStrategy(b.id)?.total_trades ?? 0
           return bT - aT
         }
         case "risk":
@@ -212,7 +261,7 @@ export function StrategyLayout({
     filterStatus,
     sortKey,
     runningTypes,
-    instanceMap,
+    getInstanceForStrategy,
   ])
 
   // Group by tier for tier view
@@ -289,7 +338,7 @@ export function StrategyLayout({
             >
               {totalPnl === 0
                 ? "$0.00"
-                : `${totalPnl > 0 ? "+" : ""}$${Math.abs(totalPnl).toFixed(2)}`}
+                : `${totalPnl > 0 ? "+" : "-"}$${Math.abs(totalPnl).toFixed(2)}`}
             </p>
           </div>
         </Card>
@@ -503,9 +552,12 @@ export function StrategyLayout({
                   <StrategyCard
                     key={strategy.id}
                     strategy={strategy}
-                    isRunning={runningTypes.has(strategy.id)}
+                    isRunning={
+                      runningTypes.has(strategy.id) ||
+                      getInstanceForStrategy(strategy.id)?.status === "running"
+                    }
                     selectedPair={selectedPair}
-                    instance={instanceMap.get(strategy.id) ?? null}
+                    instance={getInstanceForStrategy(strategy.id)}
                     compact={viewMode === "compact"}
                   />
                 ))}
@@ -527,9 +579,12 @@ export function StrategyLayout({
             <StrategyCard
               key={strategy.id}
               strategy={strategy}
-              isRunning={runningTypes.has(strategy.id)}
+              isRunning={
+                runningTypes.has(strategy.id) ||
+                getInstanceForStrategy(strategy.id)?.status === "running"
+              }
               selectedPair={selectedPair}
-              instance={instanceMap.get(strategy.id) ?? null}
+              instance={getInstanceForStrategy(strategy.id)}
               compact={viewMode === "compact"}
             />
           ))}

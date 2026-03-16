@@ -294,11 +294,11 @@ export function StrategyCard({
                   !isProfitable && !isLoss && "text-muted-foreground"
                 )}
               >
-                {pnl === 0 ? (
+                {pnl === 0 && !instance ? (
                   "--"
                 ) : (
                   <>
-                    {isProfitable ? "+" : ""}${Math.abs(pnl).toFixed(2)}
+                    {isProfitable ? "+" : isLoss ? "-" : ""}${Math.abs(pnl).toFixed(2)}
                   </>
                 )}
               </p>

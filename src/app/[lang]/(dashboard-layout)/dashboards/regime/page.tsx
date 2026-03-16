@@ -21,10 +21,15 @@ interface RegimeInfo {
 
 interface VolatilityStatus {
   symbol: string
-  atr_14: number
-  atr_pct: number
-  level: string
-  should_pause: boolean
+  atr_14?: number
+  atr_pct?: number
+  atr_value?: number
+  atr_percentile?: number
+  level?: string
+  volatility_regime?: string
+  is_volatile?: boolean
+  should_pause?: boolean
+  message?: string
 }
 
 interface StrategyRegimeEntry {

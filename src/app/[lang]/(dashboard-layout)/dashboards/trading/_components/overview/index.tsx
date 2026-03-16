@@ -189,10 +189,10 @@ export function TradingOverview({ data, stats }: TradingOverviewProps) {
           />
           <QuickStat
             label="Win Rate"
-            value={`${(stats.win_rate * 100).toFixed(1)}%`}
+            value={`${stats.win_rate.toFixed(1)}%`}
             icon={Target}
             valueColor={
-              stats.win_rate >= 0.5 ? "text-success" : "text-destructive"
+              stats.win_rate >= 50 ? "text-success" : "text-destructive"
             }
           />
           <QuickStat

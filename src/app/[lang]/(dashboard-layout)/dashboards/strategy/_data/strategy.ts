@@ -302,6 +302,76 @@ const STRATEGY_META: Record<
     plainDescription:
       "RSI and VWAP confluence for trend entries. Dual confirmation, lower risk.",
   },
+  solana_sniper: {
+    name: "Solana Sniper",
+    category: "trend",
+    riskLevel: "high",
+    profitHorizon: "quick-gains",
+    maxProfitRating: 5,
+    returnSpeed: 5,
+    plainDescription:
+      "Scans for new Solana tokens and snipes momentum plays. High risk, high reward.",
+  },
+  arb_strategy: {
+    name: "Arbitrage",
+    category: "arbitrage",
+    riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Cross-pair arbitrage with momentum confirmation and reversal detection.",
+  },
+  hma_trend: {
+    name: "HMA Trend",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "Hull Moving Average trend following with reduced lag for faster signals.",
+  },
+  supertrend: {
+    name: "Supertrend",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "ATR-based trend indicator with dynamic support/resistance trailing.",
+  },
+  keltner_channel: {
+    name: "Keltner Channel",
+    category: "trend",
+    riskLevel: "medium",
+    profitHorizon: "medium-term",
+    maxProfitRating: 3,
+    returnSpeed: 3,
+    plainDescription:
+      "EMA-based channel breakouts with ATR volatility bands for clean entries.",
+  },
+  stochastic_rsi: {
+    name: "Stochastic RSI",
+    category: "mean-reversion",
+    riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Stochastic oscillator applied to RSI for precise overbought/oversold signals.",
+  },
+  williams_r: {
+    name: "Williams %R",
+    category: "mean-reversion",
+    riskLevel: "medium",
+    profitHorizon: "short-term",
+    maxProfitRating: 3,
+    returnSpeed: 4,
+    plainDescription:
+      "Williams %R momentum oscillator for overbought/oversold reversal entries.",
+  },
 }
 
 /**

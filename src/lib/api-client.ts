@@ -40,6 +40,45 @@ export interface Position {
   leverage: number
 }
 
+export interface PaperPosition {
+  symbol: string
+  side: string
+  size: number
+  entry_price: number
+  mark_price: number
+  unrealized_pnl: number
+  pnl_pct: number
+  leverage: number
+  size_usd: number
+  strategy_name: string
+  entry_time: string
+}
+
+export interface PaperPositionsResponse {
+  total: number
+  positions: PaperPosition[]
+}
+
+export interface PaperTrade {
+  id: number
+  symbol: string
+  side: string
+  action: string
+  price: number
+  size: number
+  size_usd: number
+  pnl: number
+  pnl_pct: number
+  reason: string
+  strategy: string
+  timestamp: string
+}
+
+export interface PaperTradesResponse {
+  total: number
+  trades: PaperTrade[]
+}
+
 export interface Trade {
   id: number
   symbol: string
@@ -464,6 +503,12 @@ export const api = {
   getPositions: () => fetchAPI<Position[]>("/positions"),
   getTrades: (limit?: number) =>
     fetchAPI<Trade[]>(`/trades?limit=${limit ?? 50}`),
+
+  // ── Paper Trading Positions & Trades ─────
+  getPaperPositions: () =>
+    fetchAPI<PaperPositionsResponse>("/paper/positions"),
+  getPaperTrades: (limit?: number) =>
+    fetchAPI<PaperTradesResponse>(`/paper/trades?limit=${limit ?? 50}`),
 
   // ── Legacy single-strategy endpoints ───────
   getStrategyStatus: () => fetchAPI<StrategyStatus>("/strategy/status"),

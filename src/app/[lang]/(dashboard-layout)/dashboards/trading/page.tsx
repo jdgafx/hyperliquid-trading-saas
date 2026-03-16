@@ -1,4 +1,4 @@
-import type { DashboardStats } from "@/lib/api-client"
+import type { DashboardStats, Position, Trade } from "@/lib/api-client"
 import type { Metadata } from "next"
 import type {
   ActivePosition,
@@ -33,20 +33,29 @@ export default async function TradingPage() {
   let dashboardStats: DashboardStats | null = null
 
   try {
-    const [vaultStatus, apiPositions, apiTrades, apiStats] = await Promise.all([
-      api.getVaultStatus(),
-      api.getPositions(),
-      api.getTrades(10),
-      api.getDashboardStats().catch(() => null),
-    ])
+    // Fetch all data independently so one failure doesn't block the rest
+    const [vaultStatus, apiPositions, apiTrades, apiStats, apiStrategies] =
+      await Promise.all([
+        api.getVaultStatus().catch(() => null),
+        api.getPositions().catch(() => [] as Position[]),
+        api.getTrades(10).catch(() => [] as Trade[]),
+        api.getDashboardStats().catch(() => null),
+        api.getStrategies().catch(() => null),
+      ])
 
     dashboardStats = apiStats
 
     // Map vault status to overview card format, enriched with dashboard stats
-    const vaultEquity = dashboardStats?.vault_equity ?? vaultStatus.total_equity
-    const unrealizedPnlValue =
-      (vaultStatus.live_equity ?? vaultStatus.total_equity) -
-      vaultStatus.total_equity
+    const totalEquity = vaultStatus?.total_equity ?? dashboardStats?.vault_equity ?? 0
+    const vaultEquity = dashboardStats?.vault_equity ?? totalEquity
+    const portfolioVal = vaultStatus?.live_equity ?? totalEquity
+    const unrealizedPnlValue = portfolioVal - totalEquity
+
+    // Calculate PnL percentage relative to portfolio value (avoid division by zero)
+    const pnlPct =
+      dashboardStats && portfolioVal > 0
+        ? (dashboardStats.total_pnl / portfolioVal) * 100
+        : 0
 
     overviewData = {
       vaultEquity: {
@@ -55,13 +64,13 @@ export default async function TradingPage() {
         perDay: [],
       },
       navPerShare: {
-        value: vaultStatus.nav_per_share,
+        value: vaultStatus?.nav_per_share ?? 0,
         percentageChange: 0,
         perDay: [],
       },
       portfolioValue: {
-        value: vaultStatus.live_equity ?? vaultStatus.total_equity,
-        percentageChange: dashboardStats ? dashboardStats.total_pnl : 0,
+        value: portfolioVal,
+        percentageChange: pnlPct,
         perDay: [],
       },
       unrealizedPnl: {
@@ -92,6 +101,39 @@ export default async function TradingPage() {
       pnl: t.pnl,
       status: (t.is_open ? "open" : "closed") as "open" | "closed",
     }))
+
+    // If positions/trades are empty, try to extract from running strategies
+    if (positions.length === 0 && apiStrategies && apiStrategies.length > 0) {
+      const runningStrategies = apiStrategies.filter(
+        (s) => s.status === "running" && s.last_signal
+      )
+      // Show running strategies as pseudo-positions so the UI isn't empty
+      positions = runningStrategies
+        .filter((s) => s.last_signal && s.last_signal !== "none")
+        .map((s) => ({
+          symbol: s.symbol,
+          side: s.last_signal === "buy" || s.last_signal === "long" ? "long" : "short",
+          size: s.size_usd,
+          entryPrice: 0,
+          markPrice: 0,
+          unrealizedPnl: s.total_pnl,
+          leverage: s.leverage,
+        }))
+    }
+
+    // If trades are empty, build summary entries from strategies that have traded
+    if (trades.length === 0 && apiStrategies && apiStrategies.length > 0) {
+      const tradedStrategies = apiStrategies.filter((s) => s.total_trades > 0)
+      trades = tradedStrategies.map((s, idx) => ({
+        id: s.id ?? idx,
+        symbol: s.symbol,
+        side: "long",
+        size: s.size_usd,
+        entryPrice: 0,
+        pnl: s.total_pnl,
+        status: s.status === "running" ? ("open" as const) : ("closed" as const),
+      }))
+    }
   } catch (error) {
     console.error("Failed to fetch trading data:", error)
   }

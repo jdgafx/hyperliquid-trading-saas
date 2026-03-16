@@ -38,10 +38,15 @@ interface RegimeInfo {
 
 interface VolatilityStatus {
   symbol: string
-  atr_14: number
-  atr_pct: number
-  level: string
-  should_pause: boolean
+  atr_14?: number
+  atr_pct?: number
+  atr_value?: number
+  atr_percentile?: number
+  level?: string
+  volatility_regime?: string
+  is_volatile?: boolean
+  should_pause?: boolean
+  message?: string
 }
 
 interface StrategyRegimeEntry {
@@ -195,7 +200,7 @@ export function RegimeDashboard({
     }
   }, [])
 
-  const anyPaused = volatility.some((v) => v.should_pause)
+  const anyPaused = volatility.some((v) => v.should_pause || v.is_volatile)
 
   return (
     <div className="flex flex-col gap-6">
@@ -210,7 +215,7 @@ export function RegimeDashboard({
               </p>
               <p className="text-sm text-red-300/80">
                 {volatility
-                  .filter((v) => v.should_pause)
+                  .filter((v) => v.should_pause || v.is_volatile)
                   .map((v) => v.symbol)
                   .join(", ")}{" "}
                 showing extreme volatility. Bots should pause or reduce position
@@ -263,14 +268,14 @@ export function RegimeDashboard({
                       </p>
                       <p
                         className={`text-xl font-bold tabular-nums ${
-                          r.confidence >= 70
+                          (r.confidence ?? 0) >= 70
                             ? "text-emerald-400"
-                            : r.confidence >= 40
+                            : (r.confidence ?? 0) >= 40
                               ? "text-amber-400"
                               : "text-red-400"
                         }`}
                       >
-                        {r.confidence.toFixed(0)}%
+                        {(r.confidence ?? 0).toFixed(0)}%
                       </p>
                     </div>
                     <div>
@@ -278,7 +283,7 @@ export function RegimeDashboard({
                         Duration
                       </p>
                       <p className="text-xl font-bold tabular-nums">
-                        {formatDuration(r.duration_hours)}
+                        {formatDuration(r.duration_hours ?? 0)}
                       </p>
                     </div>
                   </div>
@@ -289,7 +294,7 @@ export function RegimeDashboard({
                       Recommended Strategies
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      {r.recommended_strategies.length > 0 ? (
+                      {(r.recommended_strategies ?? []).length > 0 ? (
                         r.recommended_strategies.map((s) => (
                           <Badge
                             key={s}
@@ -313,7 +318,7 @@ export function RegimeDashboard({
                       Avoid
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      {r.avoid_strategies.length > 0 ? (
+                      {(r.avoid_strategies ?? []).length > 0 ? (
                         r.avoid_strategies.map((s) => (
                           <Badge
                             key={s}
@@ -358,7 +363,11 @@ export function RegimeDashboard({
           {volatility.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-3">
               {volatility.map((v) => {
-                const volStyle = getVolStyle(v.level)
+                const volLevel = v.level ?? v.volatility_regime ?? "normal"
+                const volStyle = getVolStyle(volLevel)
+                const atrValue = v.atr_14 ?? v.atr_value ?? 0
+                const atrPct = v.atr_pct ?? v.atr_percentile ?? 0
+                const shouldPause = v.should_pause || v.is_volatile || false
                 return (
                   <div
                     key={v.symbol}
@@ -367,7 +376,7 @@ export function RegimeDashboard({
                     <div>
                       <p className="font-semibold">{v.symbol}</p>
                       <p className="text-xs text-muted-foreground">
-                        ATR(14): {v.atr_14.toFixed(2)} ({v.atr_pct.toFixed(2)}
+                        ATR(14): {atrValue.toFixed(2)} ({atrPct.toFixed(2)}
                         %)
                       </p>
                     </div>
@@ -375,7 +384,7 @@ export function RegimeDashboard({
                       <p className={`text-sm font-bold ${volStyle.color}`}>
                         {volStyle.label}
                       </p>
-                      {v.should_pause && (
+                      {shouldPause && (
                         <p className="text-[10px] font-semibold text-red-400">
                           PAUSE BOTS
                         </p>

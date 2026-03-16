@@ -105,6 +105,7 @@ export function TradingPairSelector({
         setFundingRate(data.funding_rate)
       })
       .catch(() => {
+        // /market/price endpoint may not exist on backend — silently degrade
         if (cancelled) return
         setPrice(null)
         setFundingRate(null)

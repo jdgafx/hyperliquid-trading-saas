@@ -190,7 +190,7 @@ export function PortfolioDashboard() {
     0
   )
   const portfolioValue =
-    vault?.live_equity ?? vault?.total_equity ?? stats?.vault_equity ?? 0
+    (vault?.live_equity || vault?.total_equity || stats?.vault_equity) ?? 0
 
   // Strategy allocation data for pie chart
   const allocationData = runningStrategies
