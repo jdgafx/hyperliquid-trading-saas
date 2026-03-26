@@ -132,7 +132,8 @@ const RATING_STYLES: Record<string, { icon: string; color: string }> = {
   avoid: { icon: "X", color: "text-red-400 font-bold" },
 }
 
-function getRating(value: string) {
+function getRating(value: string | undefined) {
+  if (!value) return { icon: "~", color: "text-muted-foreground" }
   return (
     RATING_STYLES[value.toLowerCase()] ?? {
       icon: value,
@@ -192,7 +193,26 @@ export function RegimeDashboard({
         )
       }
       if (volRes?.ok) setVolatility(await volRes.json())
-      if (mapRes?.ok) setStrategyMap(await mapRes.json())
+      if (mapRes?.ok) {
+        const mapData = await mapRes.json()
+        setStrategyMap(
+          mapData.map((d: Record<string, unknown>) => {
+            if (d.trending_up !== undefined) return d
+            const favs = (d.favorable_regimes ?? []) as string[]
+            const avoids = (d.unfavorable_regimes ?? []) as string[]
+            const rate = (regime: string) =>
+              avoids.includes(regime) ? "avoid" : favs.includes(regime) ? "good" : "neutral"
+            return {
+              strategy: d.strategy_type ?? d.strategy ?? "unknown",
+              trending_up: rate("trending_up"),
+              trending_down: rate("trending_down"),
+              mean_reverting: rate("mean_reverting"),
+              high_volatility: rate("high_volatility"),
+              low_volatility: rate("low_volatility"),
+            }
+          })
+        )
+      }
     } catch {
       // silent
     } finally {

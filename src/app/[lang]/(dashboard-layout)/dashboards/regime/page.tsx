@@ -84,7 +84,28 @@ async function fetchStrategyMap(): Promise<StrategyRegimeEntry[]> {
       cache: "no-store",
     })
     if (!res.ok) return []
-    return await res.json()
+    const data = await res.json()
+    // API returns {strategy_type, favorable_regimes[], unfavorable_regimes[]}
+    // but component expects {strategy, trending_up: "good", ...} per-regime ratings
+    return data.map(
+      (d: { strategy_type?: string; strategy?: string; favorable_regimes?: string[]; unfavorable_regimes?: string[]; trending_up?: string }) => {
+        // If already in expected format, pass through
+        if (d.trending_up !== undefined) return d as StrategyRegimeEntry
+        // Transform from API format
+        const favs = d.favorable_regimes ?? []
+        const avoids = d.unfavorable_regimes ?? []
+        const rate = (regime: string) =>
+          avoids.includes(regime) ? "avoid" : favs.includes(regime) ? "good" : "neutral"
+        return {
+          strategy: d.strategy_type ?? d.strategy ?? "unknown",
+          trending_up: rate("trending_up"),
+          trending_down: rate("trending_down"),
+          mean_reverting: rate("mean_reverting"),
+          high_volatility: rate("high_volatility"),
+          low_volatility: rate("low_volatility"),
+        } as StrategyRegimeEntry
+      }
+    )
   } catch {
     return []
   }
