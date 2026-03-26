@@ -46,7 +46,8 @@ export default async function TradingPage() {
     dashboardStats = apiStats
 
     // Map vault status to overview card format, enriched with dashboard stats
-    const totalEquity = vaultStatus?.total_equity ?? dashboardStats?.vault_equity ?? 0
+    const totalEquity =
+      vaultStatus?.total_equity ?? dashboardStats?.vault_equity ?? 0
     const vaultEquity = dashboardStats?.vault_equity ?? totalEquity
     const portfolioVal = vaultStatus?.live_equity ?? totalEquity
     const unrealizedPnlValue = portfolioVal - totalEquity
@@ -112,7 +113,10 @@ export default async function TradingPage() {
         .filter((s) => s.last_signal && s.last_signal !== "none")
         .map((s) => ({
           symbol: s.symbol,
-          side: s.last_signal === "buy" || s.last_signal === "long" ? "long" : "short",
+          side:
+            s.last_signal === "buy" || s.last_signal === "long"
+              ? "long"
+              : "short",
           size: s.size_usd,
           entryPrice: 0,
           markPrice: 0,
@@ -131,7 +135,8 @@ export default async function TradingPage() {
         size: s.size_usd,
         entryPrice: 0,
         pnl: s.total_pnl,
-        status: s.status === "running" ? ("open" as const) : ("closed" as const),
+        status:
+          s.status === "running" ? ("open" as const) : ("closed" as const),
       }))
     }
   } catch (error) {

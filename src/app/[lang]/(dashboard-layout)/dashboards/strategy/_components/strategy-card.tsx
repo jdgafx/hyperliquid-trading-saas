@@ -298,7 +298,8 @@ export function StrategyCard({
                   "--"
                 ) : (
                   <>
-                    {isProfitable ? "+" : isLoss ? "-" : ""}${Math.abs(pnl).toFixed(2)}
+                    {isProfitable ? "+" : isLoss ? "-" : ""}$
+                    {Math.abs(pnl).toFixed(2)}
                   </>
                 )}
               </p>

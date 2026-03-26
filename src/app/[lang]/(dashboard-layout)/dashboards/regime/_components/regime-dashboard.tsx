@@ -201,7 +201,11 @@ export function RegimeDashboard({
             const favs = (d.favorable_regimes ?? []) as string[]
             const avoids = (d.unfavorable_regimes ?? []) as string[]
             const rate = (regime: string) =>
-              avoids.includes(regime) ? "avoid" : favs.includes(regime) ? "good" : "neutral"
+              avoids.includes(regime)
+                ? "avoid"
+                : favs.includes(regime)
+                  ? "good"
+                  : "neutral"
             return {
               strategy: d.strategy_type ?? d.strategy ?? "unknown",
               trending_up: rate("trending_up"),

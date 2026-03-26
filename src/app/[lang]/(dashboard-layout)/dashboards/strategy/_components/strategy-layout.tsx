@@ -126,8 +126,7 @@ export function StrategyLayout({
         map.set(key, {
           ...existing,
           total_pnl: (existing.total_pnl ?? 0) + (inst.total_pnl ?? 0),
-          total_trades:
-            (existing.total_trades ?? 0) + (inst.total_trades ?? 0),
+          total_trades: (existing.total_trades ?? 0) + (inst.total_trades ?? 0),
           winning_trades:
             (existing.winning_trades ?? 0) + (inst.winning_trades ?? 0),
           losing_trades:

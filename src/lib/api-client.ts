@@ -505,8 +505,7 @@ export const api = {
     fetchAPI<Trade[]>(`/trades?limit=${limit ?? 50}`),
 
   // ── Paper Trading Positions & Trades ─────
-  getPaperPositions: () =>
-    fetchAPI<PaperPositionsResponse>("/paper/positions"),
+  getPaperPositions: () => fetchAPI<PaperPositionsResponse>("/paper/positions"),
   getPaperTrades: (limit?: number) =>
     fetchAPI<PaperTradesResponse>(`/paper/trades?limit=${limit ?? 50}`),
 
