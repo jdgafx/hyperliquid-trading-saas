@@ -28,7 +28,7 @@ export const footerNavigationData = [
   {
     title: "Resources",
     links: [
-      { label: "Documentation", href: "http://localhost:3000/docs" },
+      { label: "Documentation", href: "/docs" },
       { label: "GitHub", href: "https://github.com/Qualiora/open-algotrade" },
       {
         label: "Changelog",

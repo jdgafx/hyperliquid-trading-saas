@@ -18,7 +18,7 @@ import {
   ArrowUpRight,
   BarChart3,
   Bot,
-  PieChart,
+  ChartPie,
   RefreshCw,
   Target,
   TrendingDown,
@@ -185,10 +185,7 @@ export function PortfolioDashboard() {
   const totalWins = strategies.reduce((s, i) => s + (i.winning_trades ?? 0), 0)
   const overallWinRate =
     totalTradeCount > 0 ? ((totalWins / totalTradeCount) * 100).toFixed(1) : "0"
-  const _maxDrawdown = Math.min(
-    ...strategies.map((s) => s.max_drawdown ?? 0),
-    0
-  )
+
   const portfolioValue =
     (vault?.live_equity || vault?.total_equity || stats?.vault_equity) ?? 0
 
@@ -350,7 +347,7 @@ export function PortfolioDashboard() {
           <CardContent>
             {allocationData.length === 0 ? (
               <div className="card-grid-bg flex h-48 flex-col items-center justify-center gap-2 text-muted-foreground">
-                <PieChart className="size-8 opacity-30" />
+                <ChartPie className="size-8 opacity-30" />
                 <p className="text-xs">No active allocations</p>
               </div>
             ) : (
