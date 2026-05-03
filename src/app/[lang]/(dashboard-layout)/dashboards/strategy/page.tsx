@@ -6,6 +6,7 @@ import { fallbackStrategies, toStrategyDefinition } from "./_data/strategy"
 
 import { api } from "@/lib/api-client"
 
+import { AutoRefresh } from "@/components/auto-refresh"
 import { StrategyLayout } from "./_components/strategy-layout"
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export default async function StrategyPage() {
 
   return (
     <section className="page-grid-bg noise-overlay min-h-[calc(100vh-4rem)] p-4 md:p-6">
+      <AutoRefresh interval={15000} />
       <div className="mx-auto max-w-[1800px] space-y-5 stagger-children">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">

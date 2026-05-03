@@ -9,6 +9,7 @@ import type {
 
 import { api } from "@/lib/api-client"
 
+import { AutoRefresh } from "@/components/auto-refresh"
 import { ActivePositions } from "./_components/active-positions"
 import { TradingOverview } from "./_components/overview"
 import { PortfolioPerformance } from "./_components/portfolio-performance"
@@ -145,6 +146,7 @@ export default async function TradingPage() {
 
   return (
     <section className="page-grid-bg noise-overlay min-h-[calc(100vh-4rem)] p-4 md:p-6">
+      <AutoRefresh interval={15000} />
       <div className="mx-auto max-w-[1600px] space-y-5 stagger-children">
         {/* Page header */}
         <div>
