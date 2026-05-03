@@ -479,6 +479,119 @@ export interface FeeCalculatorOutput {
   warning: string | null
 }
 
+// ── Solana Sniper Types ───────────────────────
+export interface SolanaStats {
+  scanner_enabled: boolean
+  birdeye_api_key_set: boolean
+  total_scans: number
+  last_scan_time: string | null
+  total_tokens_seen: number
+  total_tokens_passed: number
+  blacklisted_count: number
+  currently_scanning: boolean
+  paper_balance: number
+  initial_balance: number
+  open_positions: number
+  total_trades: number
+  total_closed_trades: number
+  winning_trades: number
+  losing_trades: number
+  win_rate: number
+  total_realized_pnl: number
+  total_return_pct: number
+}
+
+export interface SolanaToken {
+  address: string
+  symbol?: string
+  name?: string
+  price?: number
+  volume_24h?: number
+  market_cap?: number
+  score?: number
+  created_at?: string
+}
+
+export interface SolanaPosition {
+  token_address: string
+  symbol?: string
+  entry_price: number
+  current_price?: number
+  amount: number
+  pnl?: number
+  pnl_pct?: number
+  opened_at?: string
+}
+
+export interface SolanaTrade {
+  id?: string
+  token_address: string
+  symbol?: string
+  side: "buy" | "sell"
+  price: number
+  amount: number
+  pnl?: number
+  timestamp: string
+}
+
+export interface SolanaConfig {
+  scanner_enabled: boolean
+  birdeye_api_key_set?: boolean
+  solana_rpc_url?: string
+  hours_lookback?: number
+  max_top10_holder_pct?: number
+  drop_if_mutable_metadata?: boolean
+  drop_if_token_2022?: boolean
+  max_market_cap?: number
+  min_market_cap?: number
+  min_liquidity?: number
+  min_trades_1h?: number
+  min_unique_wallets_24h?: number
+  max_sell_pct?: number
+  ohlcv_timeframe?: string
+  max_bars_before_drop?: number
+  require_above_avg_close?: boolean
+  sma_fast?: number
+  sma_slow?: number
+  paper_balance?: number
+  position_size_usdc?: number
+  sell_at_multiple?: number
+  stop_loss_pct?: number
+  scan_interval_seconds?: number
+}
+
+export interface SolanaScanResult {
+  status: string
+  tokens_fetched: number
+  security_passed: number
+  metrics_passed: number
+  tokens_passed: number
+  passed_tokens: SolanaToken[]
+  scan_time_seconds: number
+  error: string | null
+  message: string | null
+}
+
+export interface SolanaConfigResponse {
+  config: SolanaConfig
+}
+
+export interface SolanaPositionsResponse {
+  total: number
+  positions: SolanaPosition[]
+  paper_balance: number
+}
+
+export interface SolanaTradesResponse {
+  total: number
+  trades: SolanaTrade[]
+}
+
+export interface SolanaTokensResponse {
+  total: number
+  tokens: SolanaToken[]
+}
+
 export const api = {
   // ── API Key Management ───────────────────────
   testApiKey: (apiKey: string, apiSecret: string) =>
@@ -692,6 +805,33 @@ export const api = {
     >(`/regime/history?symbol=${symbol}&limit=${limit ?? 50}`),
   getVolatilityStatus: (symbols: string = "BTC,ETH,SOL") =>
     fetchAPI<VolatilityStatus[]>(`/regime/volatility?symbols=${symbols}`),
+
+  // ── Solana Sniper ─────────────────────────────
+  getSolanaStats: () => fetchAPI<SolanaStats>("/solana/stats"),
+  getSolanaTokens: () => fetchAPI<SolanaTokensResponse>("/solana/tokens"),
+  getSolanaPositions: () => fetchAPI<SolanaPositionsResponse>("/solana/positions"),
+  getSolanaTrades: () => fetchAPI<SolanaTradesResponse>("/solana/trades"),
+  getSolanaConfig: () => fetchAPI<SolanaConfigResponse>("/solana/config"),
+  triggerSolanaScan: () => fetchAPI<SolanaScanResult>("/solana/scan"),
+  startSolanaScanner: () =>
+    fetchAPI<{ status: string }>("/solana/scanner/start", { method: "POST" }),
+  stopSolanaScanner: () =>
+    fetchAPI<{ status: string }>("/solana/scanner/stop", { method: "POST" }),
+  updateSolanaConfig: (config: Partial<SolanaConfig>) =>
+    fetchAPI<SolanaConfigResponse>("/solana/config", {
+      method: "POST",
+      body: JSON.stringify(config),
+    }),
+  buySolanaToken: (params: { token_address: string; amount_sol: number }) =>
+    fetchAPI<{ status: string }>("/solana/buy", {
+      method: "POST",
+      body: JSON.stringify(params),
+    }),
+  sellSolanaToken: (params: { token_address: string; amount_pct: number }) =>
+    fetchAPI<{ status: string }>("/solana/sell", {
+      method: "POST",
+      body: JSON.stringify(params),
+    }),
 
   // ── Billing ──────────────────────────────────
   getBillingTiers: () =>

@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react"
 
+import { api, SolanaPosition, SolanaStats, SolanaToken, SolanaTrade } from "@/lib/api-client"
 import { cn } from "@/lib/utils"
 
 import { Badge } from "@/components/ui/badge"
@@ -93,75 +94,79 @@ interface SniperConfig {
   positionSizeUsd: number
 }
 
-// --- Mock Data ---
+// --- Adapters: map backend snake_case → UI camelCase ---
+// Many backend fields are missing on new tokens; we fill safe defaults so the
+// UI never crashes on undefined values.
 
-function generateMockTokens(): TokenScan[] {
-  const names = [
-    ["BONKFI", "BFI"],
-    ["SolCat", "SCAT"],
-    ["MoonPepe", "MPEPE"],
-    ["DogWifSword", "DWS"],
-    ["JupiterX", "JUPX"],
-    ["RaydiumGem", "RGEM"],
-    ["PhantomGold", "PGLD"],
-    ["OrcaWhale", "ORCW"],
-    ["DriftKing", "DKING"],
-    ["MarinadeMax", "MMAX"],
-    ["SaberEdge", "SEDGE"],
-    ["TulipFarm", "TULIP"],
-  ]
-
-  return names.map(([name, symbol], i) => ({
-    id: `token-${i}`,
-    name,
-    symbol,
-    mint: `${symbol.toLowerCase()}...${Math.random().toString(36).slice(2, 8)}`,
-    marketCap: Math.floor(Math.random() * 500000) + 5000,
-    liquidity: Math.floor(Math.random() * 100000) + 1000,
-    holders: Math.floor(Math.random() * 2000) + 10,
-    topHolderPct: Math.floor(Math.random() * 60) + 5,
-    securityScore: Math.floor(Math.random() * 100),
-    age: ["1m", "3m", "8m", "15m", "30m", "1h", "2h", "6h"][
-      Math.floor(Math.random() * 8)
-    ],
-    priceChange5m: (Math.random() - 0.4) * 50,
-    priceChange1h: (Math.random() - 0.3) * 200,
-    volume5m: Math.floor(Math.random() * 50000) + 100,
-    isFlagged: Math.random() > 0.7,
-    flagReason: Math.random() > 0.5 ? "Honeypot risk" : "High concentration",
-  }))
+function adaptToken(t: SolanaToken, index: number): TokenScan {
+  return {
+    id: t.address ?? `token-${index}`,
+    name: t.name ?? t.symbol ?? t.address?.slice(0, 8) ?? "Unknown",
+    symbol: t.symbol ?? t.address?.slice(0, 6).toUpperCase() ?? "???",
+    mint: t.address ?? "",
+    marketCap: t.market_cap ?? 0,
+    // backend has no liquidity field; default 0 (filter will pass if minLiquidity is 0)
+    liquidity: 0,
+    // backend has no holder count or top-holder % fields; default safe values
+    holders: 0,
+    topHolderPct: 0,
+    // backend has no security score; default 50 (caution band)
+    securityScore: t.score != null ? Math.round(t.score * 100) : 50,
+    age: t.created_at
+      ? formatAge(new Date(t.created_at))
+      : "?",
+    priceChange5m: 0,
+    priceChange1h: 0,
+    volume5m: 0,
+    isFlagged: false,
+  }
 }
 
-function generateMockPositions(): SniperPosition[] {
-  return [
-    {
-      id: "pos-1",
-      tokenName: "BONKFI",
-      symbol: "BFI",
-      mint: "bfi...x8f2k",
-      entryPrice: 0.00023,
-      currentPrice: 0.00031,
-      size: 50,
-      pnl: 17.39,
-      pnlPct: 34.78,
-      entryTime: "12m ago",
-      status: "open",
-    },
-    {
-      id: "pos-2",
-      tokenName: "SolCat",
-      symbol: "SCAT",
-      mint: "scat...p3m9r",
-      entryPrice: 0.0015,
-      currentPrice: 0.0009,
-      size: 25,
-      pnl: -10.0,
-      pnlPct: -40.0,
-      entryTime: "1h ago",
-      status: "sl-hit",
-    },
-  ]
+function adaptPosition(p: SolanaPosition, index: number): SniperPosition {
+  const pnl = p.pnl ?? 0
+  const pnlPct = p.pnl_pct ?? 0
+  return {
+    id: `pos-${index}`,
+    tokenName: p.symbol ?? p.token_address?.slice(0, 8) ?? "Unknown",
+    symbol: p.symbol ?? p.token_address?.slice(0, 6).toUpperCase() ?? "???",
+    mint: p.token_address ?? "",
+    entryPrice: p.entry_price,
+    currentPrice: p.current_price ?? p.entry_price,
+    size: p.amount,
+    pnl,
+    pnlPct,
+    entryTime: p.opened_at ? formatAge(new Date(p.opened_at)) : "?",
+    status: "open",
+  }
 }
+
+function adaptTrade(t: SolanaTrade, index: number): SniperPosition {
+  const pnl = t.pnl ?? 0
+  return {
+    id: `trade-${index}`,
+    tokenName: t.symbol ?? t.token_address?.slice(0, 8) ?? "Unknown",
+    symbol: t.symbol ?? t.token_address?.slice(0, 6).toUpperCase() ?? "???",
+    mint: t.token_address ?? "",
+    entryPrice: t.price,
+    currentPrice: t.price,
+    size: t.amount,
+    pnl,
+    pnlPct: t.price > 0 ? (pnl / (t.amount * t.price)) * 100 : 0,
+    entryTime: t.timestamp ? formatAge(new Date(t.timestamp)) : "?",
+    status: t.side === "sell" ? (pnl >= 0 ? "tp-hit" : "sl-hit") : "closed",
+  }
+}
+
+function formatAge(date: Date): string {
+  const diffMs = Date.now() - date.getTime()
+  const diffMin = Math.floor(diffMs / 60000)
+  if (diffMin < 60) return `${diffMin}m`
+  const diffH = Math.floor(diffMin / 60)
+  if (diffH < 24) return `${diffH}h`
+  return `${Math.floor(diffH / 24)}d`
+}
+
+// --- Sub-components ---
 
 function SecurityBadge({ score }: { score: number }) {
   const level =
@@ -202,12 +207,13 @@ function formatCompact(value: number): string {
 export function SniperDashboard() {
   const [tokens, setTokens] = useState<TokenScan[]>([])
   const [positions, setPositions] = useState<SniperPosition[]>([])
+  const [solanaStats, setSolanaStats] = useState<SolanaStats | null>(null)
   const [config, setConfig] = useState<SniperConfig>({
     enabled: false,
-    minLiquidity: 5000,
+    minLiquidity: 0,
     maxMarketCap: 500000,
-    minSecurityScore: 40,
-    maxTopHolderPct: 50,
+    minSecurityScore: 0,
+    maxTopHolderPct: 100,
     autoSnipe: false,
     takeProfitPct: 100,
     stopLossPct: 30,
@@ -218,17 +224,67 @@ export function SniperDashboard() {
   const [scanning, setScanning] = useState(false)
   const [showConfig, setShowConfig] = useState(false)
 
+  // Load live data on mount
   useEffect(() => {
-    setTokens(generateMockTokens())
-    setPositions(generateMockPositions())
+    const loadData = async () => {
+      const [statsRes, tokensRes, positionsRes, tradesRes] = await Promise.all([
+        api.getSolanaStats().catch(() => null),
+        api.getSolanaTokens().catch(() => ({ total: 0, tokens: [] })),
+        api.getSolanaPositions().catch(() => ({ total: 0, positions: [], paper_balance: 0 })),
+        api.getSolanaTrades().catch(() => ({ total: 0, trades: [] })),
+      ])
+
+      if (statsRes) {
+        setSolanaStats(statsRes)
+        setConfig((c) => ({ ...c, enabled: statsRes.scanner_enabled }))
+      }
+
+      const adaptedTokens = tokensRes.tokens.map(adaptToken)
+      setTokens(adaptedTokens)
+
+      const adaptedPositions = positionsRes.positions.map(adaptPosition)
+      const adaptedTrades = tradesRes.trades.map(adaptTrade)
+      // Show open positions first, then closed trades
+      setPositions([...adaptedPositions, ...adaptedTrades])
+    }
+
+    loadData()
   }, [])
 
-  const handleScan = useCallback(() => {
+  const handleScan = useCallback(async () => {
     setScanning(true)
-    setTimeout(() => {
-      setTokens(generateMockTokens())
+    try {
+      const result = await api.triggerSolanaScan()
+      const adaptedTokens = (result.passed_tokens ?? []).map(adaptToken)
+      setTokens(adaptedTokens)
+      // Refresh stats after scan
+      const stats = await api.getSolanaStats().catch(() => null)
+      if (stats) setSolanaStats(stats)
+    } catch (e) {
+      console.error("Scan failed:", e)
+    } finally {
       setScanning(false)
-    }, 1500)
+    }
+  }, [])
+
+  const handleScannerToggle = useCallback(async (enabled: boolean) => {
+    setConfig((c) => ({ ...c, enabled }))
+    try {
+      if (enabled) {
+        await api.startSolanaScanner()
+      } else {
+        await api.stopSolanaScanner()
+      }
+      const stats = await api.getSolanaStats().catch(() => null)
+      if (stats) {
+        setSolanaStats(stats)
+        setConfig((c) => ({ ...c, enabled: stats.scanner_enabled }))
+      }
+    } catch (e) {
+      console.error("Scanner toggle failed:", e)
+      // Revert optimistic update on failure
+      setConfig((c) => ({ ...c, enabled: !enabled }))
+    }
   }, [])
 
   // Filter tokens
@@ -317,7 +373,7 @@ export function SniperDashboard() {
                 Open Positions
               </p>
               <p className="text-lg font-bold font-data">
-                {openPositions.length}
+                {solanaStats?.open_positions ?? openPositions.length}
               </p>
             </div>
           </Card>
@@ -365,7 +421,7 @@ export function SniperDashboard() {
             <span className="text-xs font-medium">Scanner</span>
             <Switch
               checked={config.enabled}
-              onCheckedChange={(v) => setConfig((c) => ({ ...c, enabled: v }))}
+              onCheckedChange={handleScannerToggle}
             />
           </div>
 
