@@ -560,6 +560,33 @@ export interface SolanaConfig {
   scan_interval_seconds?: number
 }
 
+export interface CompoundStatus {
+  balance: number
+  initial_balance: number
+  compound_base: number
+  reserve_pct: number
+  investable: number
+  compound_active: boolean
+  rebalance_interval_minutes: number
+}
+
+export interface LeaderboardEntry {
+  name: string
+  strategy_type: string
+  status: string
+  total_pnl: number
+  total_trades: number
+  winning_trades: number
+  losing_trades: number
+  win_rate: number
+  profitable: boolean
+  avg_pnl_per_trade: number
+}
+
+export interface LeaderboardResponse {
+  leaderboard: LeaderboardEntry[]
+}
+
 export interface SolanaScanResult {
   status: string
   tokens_fetched: number
@@ -619,8 +646,14 @@ export const api = {
 
   // ── Paper Trading Positions & Trades ─────
   getPaperPositions: () => fetchAPI<PaperPositionsResponse>("/paper/positions"),
-  getPaperTrades: (limit?: number) =>
-    fetchAPI<PaperTradesResponse>(`/paper/trades?limit=${limit ?? 50}`),
+  getPaperTrades: (limit?: number, offset?: number) =>
+    fetchAPI<PaperTradesResponse>(
+      `/paper/trades?limit=${limit ?? 50}${offset ? `&offset=${offset}` : ""}`
+    ),
+
+  // ── Compounder & Leaderboard ───────────────
+  getCompoundStatus: () => fetchAPI<CompoundStatus>("/compound/status"),
+  getLeaderboard: () => fetchAPI<LeaderboardResponse>("/strategies/leaderboard"),
 
   // ── Legacy single-strategy endpoints ───────
   getStrategyStatus: () => fetchAPI<StrategyStatus>("/strategy/status"),
@@ -809,7 +842,8 @@ export const api = {
   // ── Solana Sniper ─────────────────────────────
   getSolanaStats: () => fetchAPI<SolanaStats>("/solana/stats"),
   getSolanaTokens: () => fetchAPI<SolanaTokensResponse>("/solana/tokens"),
-  getSolanaPositions: () => fetchAPI<SolanaPositionsResponse>("/solana/positions"),
+  getSolanaPositions: () =>
+    fetchAPI<SolanaPositionsResponse>("/solana/positions"),
   getSolanaTrades: () => fetchAPI<SolanaTradesResponse>("/solana/trades"),
   getSolanaConfig: () => fetchAPI<SolanaConfigResponse>("/solana/config"),
   triggerSolanaScan: () => fetchAPI<SolanaScanResult>("/solana/scan"),
