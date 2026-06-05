@@ -1,15 +1,54 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
+// ── Lightweight client cache (T014 — look-preserving, no new deps) ──────────
+// Left-bar navigation lands on force-dynamic pages whose client components
+// refetch on mount, so returning to a section re-incurs a full round-trip and a
+// loading flash. Two safe, data-layer-only speedups inside the single fetch
+// choke point — zero component or visual change:
+//   1. in-flight dedup: concurrent identical GETs share one request (collapses
+//      a page's parallel/duplicate fetches and StrictMode double-mounts).
+//   2. short staleTime cache: a revisit within STALE_MS reuses the last response
+//      instantly (no flash). Kept well under the fastest live poll (risk = 5s)
+//      so interval-polling dashboards always refetch fresh — never served stale.
+// Mutations (POST/PUT/DELETE/PATCH) bypass the cache and clear it so the next
+// read reflects the change. Tune/disable via NEXT_PUBLIC_API_CACHE_MS (0 = off).
+const STALE_MS = Number(process.env.NEXT_PUBLIC_API_CACHE_MS ?? 2500)
+const _cache = new Map<string, { ts: number; data: unknown }>()
+const _inflight = new Map<string, Promise<unknown>>()
+
 async function fetchAPI<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const res = await fetch(`${API_BASE}${endpoint}`, {
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    ...options,
-  })
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
+  const method = (options?.method ?? "GET").toUpperCase()
+  const cacheable = method === "GET" && STALE_MS > 0
+
+  if (cacheable) {
+    const hit = _cache.get(endpoint)
+    if (hit && Date.now() - hit.ts < STALE_MS) return hit.data as T
+    const pending = _inflight.get(endpoint)
+    if (pending) return pending as Promise<T>
+  }
+
+  const run = (async () => {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      ...options,
+    })
+    if (!res.ok) throw new Error(`API error: ${res.status}`)
+    const data = (await res.json()) as T
+    if (cacheable) _cache.set(endpoint, { ts: Date.now(), data })
+    else if (method !== "GET") _cache.clear() // mutation may change server state
+    return data
+  })()
+
+  if (!cacheable) return run
+  _inflight.set(endpoint, run)
+  try {
+    return (await run) as T
+  } finally {
+    _inflight.delete(endpoint)
+  }
 }
 
 export interface VaultStatus {
