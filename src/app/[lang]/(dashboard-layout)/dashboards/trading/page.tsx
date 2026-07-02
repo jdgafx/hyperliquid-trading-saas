@@ -9,11 +9,11 @@ import type {
 
 import { api } from "@/lib/api-client"
 
-import { AutoRefresh } from "@/components/auto-refresh"
 import { ActivePositions } from "./_components/active-positions"
 import { TradingOverview } from "./_components/overview"
 import { PortfolioPerformance } from "./_components/portfolio-performance"
 import { RecentTrades } from "./_components/recent-trades"
+import { AutoRefresh } from "@/components/auto-refresh"
 
 export const metadata: Metadata = {
   title: "Trading Overview",

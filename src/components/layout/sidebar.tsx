@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
-import { ChartCandlestick, ChevronDown } from "lucide-react"
+import { ChartCandlestick, ChevronDown, Wrench, EyeOff } from "lucide-react"
 
 import type { DictionaryType } from "@/lib/get-dictionary"
 import type {
@@ -11,7 +11,7 @@ import type {
   NavigationRootItem,
 } from "@/types"
 
-import { navigationsData } from "@/data/navigations"
+import { advancedNavigationsData, navigationsData } from "@/data/navigations"
 
 import { i18n } from "@/configs/i18n"
 import { ensureLocalizedPathname } from "@/lib/i18n"
@@ -21,6 +21,7 @@ import {
   titleCaseToCamelCase,
 } from "@/lib/utils"
 
+import { usePlainMode } from "@/hooks/use-plain-mode"
 import { useSettings } from "@/hooks/use-settings"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -49,6 +50,8 @@ export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
   const params = useParams()
   const { openMobile, setOpenMobile, isMobile } = useSidebar()
   const { settings } = useSettings()
+  const { plainMode, setPlainMode, hydrated } = usePlainMode()
+  const navData = plainMode ? navigationsData : advancedNavigationsData
 
   const locale = params.lang as LocaleType
   const direction = i18n.localeDirection[locale]
@@ -142,7 +145,7 @@ export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
       </SidebarHeader>
       <ScrollArea>
         <SidebarContent className="gap-0">
-          {navigationsData.map((nav) => {
+          {navData.map((nav) => {
             const title = getDictionaryValue(
               titleCaseToCamelCase(nav.title),
               dictionary.navigation
@@ -165,6 +168,29 @@ export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
           })}
         </SidebarContent>
       </ScrollArea>
+      {hydrated && (
+        <div className="border-t border-border/40 p-2">
+          <button
+            type="button"
+            onClick={() => setPlainMode(!plainMode)}
+            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-pressed={!plainMode}
+            aria-label={plainMode ? "Show advanced tools" : "Hide advanced tools"}
+          >
+            {plainMode ? (
+              <>
+                <Wrench className="h-3.5 w-3.5" aria-hidden />
+                <span>Show advanced tools</span>
+              </>
+            ) : (
+              <>
+                <EyeOff className="h-3.5 w-3.5" aria-hidden />
+                <span>Hide advanced tools</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </SidebarWrapper>
   )
 }

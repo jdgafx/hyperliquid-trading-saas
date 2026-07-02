@@ -1,6 +1,6 @@
 import createMDX from "@next/mdx"
 
-const HOME_PATHNAME = process.env.HOME_PATHNAME || "/dashboards/trading"
+const HOME_PATHNAME = process.env.HOME_PATHNAME || "/dashboards/home"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -13,7 +13,8 @@
   --font-cairo:
     var(--font-cairo), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-display: "DM Sans", var(--font-lato), ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "DM Sans", var(--font-lato), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --color-border: hsl(var(--border));
@@ -125,7 +126,8 @@
     }
   }
   @keyframes glow-pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
@@ -347,17 +349,23 @@ aside.EmojiPickerReact {
 
   /* Glow effect for profit values */
   .glow-profit {
-    text-shadow: 0 0 12px hsl(160 84% 39% / 0.6), 0 0 4px hsl(160 84% 39% / 0.3);
+    text-shadow:
+      0 0 12px hsl(160 84% 39% / 0.6),
+      0 0 4px hsl(160 84% 39% / 0.3);
   }
 
   /* Glow effect for loss values */
   .glow-loss {
-    text-shadow: 0 0 12px hsl(0 90% 55% / 0.6), 0 0 4px hsl(0 90% 55% / 0.3);
+    text-shadow:
+      0 0 12px hsl(0 90% 55% / 0.6),
+      0 0 4px hsl(0 90% 55% / 0.3);
   }
 
   /* Glow effect for primary accent values */
   .glow-accent {
-    text-shadow: 0 0 12px hsl(var(--primary) / 0.5), 0 0 4px hsl(var(--primary) / 0.25);
+    text-shadow:
+      0 0 12px hsl(var(--primary) / 0.5),
+      0 0 4px hsl(var(--primary) / 0.25);
   }
 
   /* Card with subtle grid background pattern */
@@ -374,7 +382,7 @@ aside.EmojiPickerReact {
     overflow: hidden;
   }
   .border-glow::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
@@ -386,7 +394,9 @@ aside.EmojiPickerReact {
       transparent 60%,
       hsl(var(--primary) / 0.3)
     );
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
     animation: border-flow 4s linear infinite;
@@ -397,7 +407,7 @@ aside.EmojiPickerReact {
     position: relative;
   }
   .noise-overlay::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     opacity: 0.03;
@@ -409,21 +419,45 @@ aside.EmojiPickerReact {
   /* Page grid background */
   .page-grid-bg {
     background-image:
-      radial-gradient(circle at 25% 25%, hsl(var(--primary) / 0.03) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, hsl(185 100% 50% / 0.02) 0%, transparent 50%),
+      radial-gradient(
+        circle at 25% 25%,
+        hsl(var(--primary) / 0.03) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 75% 75%,
+        hsl(185 100% 50% / 0.02) 0%,
+        transparent 50%
+      ),
       linear-gradient(hsl(var(--border) / 0.15) 1px, transparent 1px),
       linear-gradient(90deg, hsl(var(--border) / 0.15) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    background-size:
+      100% 100%,
+      100% 100%,
+      40px 40px,
+      40px 40px;
   }
 
   /* Staggered animation delays for children */
   .stagger-children > * {
     animation: slide-up-fade 0.5s ease-out both;
   }
-  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
-  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
-  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
-  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
-  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .stagger-children > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .stagger-children > *:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .stagger-children > *:nth-child(4) {
+    animation-delay: 180ms;
+  }
+  .stagger-children > *:nth-child(5) {
+    animation-delay: 240ms;
+  }
+  .stagger-children > *:nth-child(6) {
+    animation-delay: 300ms;
+  }
 }

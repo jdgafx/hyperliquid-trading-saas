@@ -115,7 +115,11 @@
         "npm:typescript@5",
         "npm:vaul@1.1.2",
         "npm:zod@3.23.8"
-      ]
+      ],
+      "overrides": {
+        "@types/react": "19.0.12",
+        "@types/react-dom": "19.0.4"
+      }
     }
   }
 }

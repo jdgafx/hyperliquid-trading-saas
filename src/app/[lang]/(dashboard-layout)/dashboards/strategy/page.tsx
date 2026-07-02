@@ -6,8 +6,8 @@ import { fallbackStrategies, toStrategyDefinition } from "./_data/strategy"
 
 import { api } from "@/lib/api-client"
 
-import { AutoRefresh } from "@/components/auto-refresh"
 import { StrategyLayout } from "./_components/strategy-layout"
+import { AutoRefresh } from "@/components/auto-refresh"
 
 export const metadata: Metadata = {
   title: "Trading Strategies",

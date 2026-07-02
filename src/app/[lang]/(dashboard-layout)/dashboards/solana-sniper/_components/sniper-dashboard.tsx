@@ -17,7 +17,14 @@ import {
   Zap,
 } from "lucide-react"
 
-import { api, SolanaPosition, SolanaStats, SolanaToken, SolanaTrade } from "@/lib/api-client"
+import type {
+  SolanaPosition,
+  SolanaStats,
+  SolanaToken,
+  SolanaTrade,
+} from "@/lib/api-client"
+
+import { api } from "@/lib/api-client"
 import { cn } from "@/lib/utils"
 
 import { Badge } from "@/components/ui/badge"
@@ -112,9 +119,7 @@ function adaptToken(t: SolanaToken, index: number): TokenScan {
     topHolderPct: 0,
     // backend has no security score; default 50 (caution band)
     securityScore: t.score != null ? Math.round(t.score * 100) : 50,
-    age: t.created_at
-      ? formatAge(new Date(t.created_at))
-      : "?",
+    age: t.created_at ? formatAge(new Date(t.created_at)) : "?",
     priceChange5m: 0,
     priceChange1h: 0,
     volume5m: 0,
@@ -230,7 +235,9 @@ export function SniperDashboard() {
       const [statsRes, tokensRes, positionsRes, tradesRes] = await Promise.all([
         api.getSolanaStats().catch(() => null),
         api.getSolanaTokens().catch(() => ({ total: 0, tokens: [] })),
-        api.getSolanaPositions().catch(() => ({ total: 0, positions: [], paper_balance: 0 })),
+        api
+          .getSolanaPositions()
+          .catch(() => ({ total: 0, positions: [], paper_balance: 0 })),
         api.getSolanaTrades().catch(() => ({ total: 0, trades: [] })),
       ])
 
