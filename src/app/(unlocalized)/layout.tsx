@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   description: "",
   metadataBase: new URL(
-    process.env.BASE_URL || "https://open-algotrade-pwa.netlify.app"
+    process.env.BASE_URL || "https://open-algotrade-v3.netlify.app"
   ),
 }
 
