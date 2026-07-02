@@ -1,6 +1,5 @@
 import type {
   CompoundStatus,
-  LeaderboardEntry,
   PaperTrade,
   StrategyInstance,
 } from "@/lib/api-client"
@@ -21,24 +20,32 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic"
 
 export default async function CompounderPage() {
-  const [compound, leaderboard, strategies, tradesResp] = await Promise.all([
+  const [compound, strategies, tradesResp] = await Promise.all([
     api.getCompoundStatus().catch(() => null as CompoundStatus | null),
-    api
-      .getLeaderboard()
-      .catch(() => ({ leaderboard: [] as LeaderboardEntry[] })),
     api.getStrategies().catch(() => [] as StrategyInstance[]),
     api
       .getPaperTrades(200)
       .catch(() => ({ total: 0, trades: [] as PaperTrade[] })),
   ])
 
-  // Merge size_usd from strategy instances into leaderboard entries
-  const sizeMap = Object.fromEntries(
-    strategies.map((s) => [s.name, s.size_usd])
-  )
-  const leaderboardWithSize = leaderboard.leaderboard.map((e) => ({
-    ...e,
-    size_usd: sizeMap[e.name] ?? 0,
+  // Leaderboard entries derived from /strategies — the single endpoint that
+  // actually carries status/total_pnl/trade counts per instance. (The old
+  // /strategies/leaderboard response drifted to a different shape and
+  // crashed this page's RSC render — 2026-07-02.)
+  const leaderboardWithSize = strategies.map((s) => ({
+    name: s.name,
+    strategy_type: s.strategy_type,
+    status: s.status,
+    total_pnl: s.total_pnl ?? 0,
+    total_trades: s.total_trades ?? 0,
+    winning_trades: s.winning_trades ?? 0,
+    losing_trades: s.losing_trades ?? 0,
+    win_rate: s.total_trades
+      ? (100 * (s.winning_trades ?? 0)) / s.total_trades
+      : 0,
+    profitable: (s.total_pnl ?? 0) > 0,
+    avg_pnl_per_trade: s.total_trades ? (s.total_pnl ?? 0) / s.total_trades : 0,
+    size_usd: s.size_usd ?? 0,
   }))
 
   const winners = leaderboardWithSize.filter(
@@ -67,7 +74,7 @@ export default async function CompounderPage() {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <AllocationTable entries={running} />
-          <Leaderboard entries={leaderboard.leaderboard} />
+          <Leaderboard entries={leaderboardWithSize} />
         </div>
 
         <TradeHistory trades={tradesResp.trades} total={tradesResp.total} />

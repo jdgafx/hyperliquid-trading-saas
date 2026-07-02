@@ -328,14 +328,16 @@ export function formatOverviewCardValue(
 // Retrieve the dictionary value safely
 export function getDictionaryValue(
   key: string,
-  section: Record<string, unknown>
+  section: Record<string, unknown>,
+  fallback?: string
 ) {
   const value = section[key]
 
   if (typeof value !== "string") {
-    // Graceful fallback: return the key itself rather than crashing the app
+    // Graceful fallback: prefer the caller-supplied human text (e.g. the nav
+    // item's original title) over leaking the camelCased lookup key into the UI
     console.warn(`Missing dictionary value for key: ${key}`)
-    return key
+    return fallback ?? key
   }
 
   return value

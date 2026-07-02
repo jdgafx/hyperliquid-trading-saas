@@ -47,11 +47,16 @@ export function TopBarHeaderMenubar({
   const renderMenuItem = (item: NavigationRootItem | NavigationNestedItem) => {
     const title = getDictionaryValue(
       titleCaseToCamelCase(item.title),
-      dictionary.navigation
+      dictionary.navigation,
+      item.title
     )
     const label =
       item.label &&
-      getDictionaryValue(titleCaseToCamelCase(item.label), dictionary.label)
+      getDictionaryValue(
+        titleCaseToCamelCase(item.label),
+        dictionary.label,
+        item.label
+      )
 
     // If the item has nested items, render it with a MenubarSub.
     if (item.items) {
@@ -106,7 +111,8 @@ export function TopBarHeaderMenubar({
       {navigationsData.map((nav) => {
         const title = getDictionaryValue(
           titleCaseToCamelCase(nav.title),
-          dictionary.navigation
+          dictionary.navigation,
+          nav.title
         )
         return (
           <MenubarMenu key={nav.title}>
