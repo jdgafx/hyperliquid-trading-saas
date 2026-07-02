@@ -23,13 +23,15 @@ function StatCard({
 }) {
   return (
     <Card className="border-border/50 bg-card/80 p-5 backdrop-blur-sm">
-      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
       <p
         className={cn(
           "mt-1 font-data text-2xl font-bold",
           accent === "green" && "text-[hsl(185_100%_42%)]",
           accent === "red" && "text-destructive",
-          !accent || (accent === "default" && "text-foreground"),
+          !accent || (accent === "default" && "text-foreground")
         )}
       >
         {value}
@@ -44,7 +46,10 @@ export function CompoundStats({ compound, winners, running }: Props) {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="h-20 animate-pulse border-border/50 bg-muted/20" />
+          <Card
+            key={i}
+            className="h-20 animate-pulse border-border/50 bg-muted/20"
+          />
         ))}
       </div>
     )
@@ -53,11 +58,19 @@ export function CompoundStats({ compound, winners, running }: Props) {
   const pnl = compound.balance - compound.initial_balance
   const pnlPct = ((pnl / compound.initial_balance) * 100).toFixed(2)
   const fmtUsd = (n: number) =>
-    n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 })
+    n.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    })
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-      <StatCard label="Balance" value={fmtUsd(compound.balance)} sub="paper account" />
+      <StatCard
+        label="Balance"
+        value={fmtUsd(compound.balance)}
+        sub="paper account"
+      />
       <StatCard
         label="Total P&L"
         value={`${pnl >= 0 ? "+" : ""}${fmtUsd(pnl)}`}

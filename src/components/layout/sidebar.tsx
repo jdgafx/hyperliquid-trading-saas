@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
-import { ChartCandlestick, ChevronDown, Wrench, EyeOff } from "lucide-react"
+import { ChartCandlestick, ChevronDown, EyeOff, Wrench } from "lucide-react"
 
 import type { DictionaryType } from "@/lib/get-dictionary"
 import type {
@@ -175,7 +175,9 @@ export function Sidebar({ dictionary }: { dictionary: DictionaryType }) {
             onClick={() => setPlainMode(!plainMode)}
             className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-pressed={!plainMode}
-            aria-label={plainMode ? "Show advanced tools" : "Hide advanced tools"}
+            aria-label={
+              plainMode ? "Show advanced tools" : "Hide advanced tools"
+            }
           >
             {plainMode ? (
               <>

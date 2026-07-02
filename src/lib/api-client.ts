@@ -692,7 +692,8 @@ export const api = {
 
   // ── Compounder & Leaderboard ───────────────
   getCompoundStatus: () => fetchAPI<CompoundStatus>("/compound/status"),
-  getLeaderboard: () => fetchAPI<LeaderboardResponse>("/strategies/leaderboard"),
+  getLeaderboard: () =>
+    fetchAPI<LeaderboardResponse>("/strategies/leaderboard"),
 
   // ── Legacy single-strategy endpoints ───────
   getStrategyStatus: () => fetchAPI<StrategyStatus>("/strategy/status"),

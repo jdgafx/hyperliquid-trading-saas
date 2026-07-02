@@ -1,6 +1,6 @@
-import type { LeaderboardEntry } from "@/lib/api-client"
-
 import { Trophy } from "lucide-react"
+
+import type { LeaderboardEntry } from "@/lib/api-client"
 
 import { cn } from "@/lib/utils"
 
@@ -23,14 +23,20 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
     <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
       <div className="flex items-center gap-2 border-b border-border/50 px-5 py-4">
         <Trophy className="size-4 text-primary" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider">All-Time Leaderboard</h3>
-        <span className="ml-auto text-xs text-muted-foreground">{entries.length} strategies</span>
+        <h3 className="text-sm font-semibold uppercase tracking-wider">
+          All-Time Leaderboard
+        </h3>
+        <span className="ml-auto text-xs text-muted-foreground">
+          {entries.length} strategies
+        </span>
       </div>
       <div className="max-h-[420px] overflow-y-auto overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="border-border/30 hover:bg-transparent">
-              <TableHead className="w-6 text-xs text-muted-foreground">#</TableHead>
+              <TableHead className="w-6 text-xs text-muted-foreground">
+                #
+              </TableHead>
               <TableHead className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Strategy
               </TableHead>
@@ -54,10 +60,14 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
                 key={e.name}
                 className="border-border/20 transition-colors hover:bg-primary/[0.03]"
               >
-                <TableCell className="font-data text-xs text-muted-foreground">{i + 1}</TableCell>
+                <TableCell className="font-data text-xs text-muted-foreground">
+                  {i + 1}
+                </TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-xs font-semibold">{e.name}</span>
+                    <span className="font-mono text-xs font-semibold">
+                      {e.name}
+                    </span>
                     <div className="flex items-center gap-1">
                       <Badge
                         variant="outline"
@@ -65,7 +75,7 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
                           "h-4 px-1 text-[9px]",
                           e.status === "running"
                             ? "border-[hsl(185_100%_42%/0.3)] text-[hsl(185_100%_42%)]"
-                            : "text-muted-foreground",
+                            : "text-muted-foreground"
                         )}
                       >
                         {e.status}
@@ -82,7 +92,7 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
                           ? "text-[hsl(185_100%_42%)]"
                           : e.total_pnl < 0
                             ? "text-destructive"
-                            : "text-muted-foreground",
+                            : "text-muted-foreground"
                       )}
                     >
                       {e.total_pnl >= 0 ? "+" : ""}
@@ -94,7 +104,9 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
                         <div
                           className={cn(
                             "h-full rounded-full",
-                            e.total_pnl > 0 ? "bg-[hsl(185_100%_42%)]" : "bg-destructive",
+                            e.total_pnl > 0
+                              ? "bg-[hsl(185_100%_42%)]"
+                              : "bg-destructive"
                           )}
                           style={{
                             width: `${Math.min(Math.abs(e.total_pnl) / Math.abs(topPnl), 1) * 100}%`,
@@ -117,7 +129,7 @@ export function Leaderboard({ entries }: { entries: LeaderboardEntry[] }) {
                       ? "text-[hsl(185_100%_42%)]"
                       : e.avg_pnl_per_trade < 0
                         ? "text-destructive"
-                        : "text-muted-foreground",
+                        : "text-muted-foreground"
                   )}
                 >
                   {e.total_trades > 0

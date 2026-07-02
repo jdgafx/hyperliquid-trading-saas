@@ -1,6 +1,6 @@
-import type { PaperTrade } from "@/lib/api-client"
-
 import { History } from "lucide-react"
+
+import type { PaperTrade } from "@/lib/api-client"
 
 import { cn } from "@/lib/utils"
 
@@ -28,16 +28,27 @@ function fmt(ts: string) {
   }
 }
 
-export function TradeHistory({ trades, total }: { trades: PaperTrade[]; total: number }) {
-  const exits = trades.filter((t) => t.action === "exit").sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-  )
+export function TradeHistory({
+  trades,
+  total,
+}: {
+  trades: PaperTrade[]
+  total: number
+}) {
+  const exits = trades
+    .filter((t) => t.action === "exit")
+    .sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    )
 
   return (
     <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
       <div className="flex items-center gap-2 border-b border-border/50 px-5 py-4">
         <History className="size-4 text-primary" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Full Trade History</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider">
+          Full Trade History
+        </h3>
         <span className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-data text-primary">
           {exits.length} closed trades
           {total > exits.length && ` (showing ${exits.length} of ${total})`}
@@ -91,8 +102,12 @@ export function TradeHistory({ trades, total }: { trades: PaperTrade[]; total: n
                   <TableCell className="font-data text-xs text-muted-foreground whitespace-nowrap">
                     {fmt(t.timestamp)}
                   </TableCell>
-                  <TableCell className="font-mono text-xs">{t.strategy}</TableCell>
-                  <TableCell className="font-semibold text-sm">{t.symbol}</TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {t.strategy}
+                  </TableCell>
+                  <TableCell className="font-semibold text-sm">
+                    {t.symbol}
+                  </TableCell>
                   <TableCell>
                     <Badge
                       variant="outline"
@@ -100,7 +115,7 @@ export function TradeHistory({ trades, total }: { trades: PaperTrade[]; total: n
                         "text-[10px] font-semibold uppercase",
                         t.side === "long"
                           ? "border-[hsl(185_100%_42%/0.3)] bg-[hsl(185_100%_42%/0.1)] text-[hsl(185_100%_42%)]"
-                          : "border-destructive/30 bg-destructive/10 text-destructive",
+                          : "border-destructive/30 bg-destructive/10 text-destructive"
                       )}
                     >
                       {t.side}
@@ -110,7 +125,10 @@ export function TradeHistory({ trades, total }: { trades: PaperTrade[]; total: n
                     ${t.size_usd.toLocaleString()}
                   </TableCell>
                   <TableCell className="text-right font-data text-sm text-muted-foreground">
-                    {t.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {t.price.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </TableCell>
                   <TableCell
                     className={cn(
@@ -119,7 +137,7 @@ export function TradeHistory({ trades, total }: { trades: PaperTrade[]; total: n
                         ? "text-[hsl(185_100%_42%)]"
                         : t.pnl < 0
                           ? "text-destructive"
-                          : "text-muted-foreground",
+                          : "text-muted-foreground"
                     )}
                   >
                     {t.pnl >= 0 ? "+" : ""}
@@ -132,7 +150,7 @@ export function TradeHistory({ trades, total }: { trades: PaperTrade[]; total: n
                         ? "text-[hsl(185_100%_42%)]"
                         : t.pnl_pct < 0
                           ? "text-destructive"
-                          : "text-muted-foreground",
+                          : "text-muted-foreground"
                     )}
                   >
                     {t.pnl_pct >= 0 ? "+" : ""}

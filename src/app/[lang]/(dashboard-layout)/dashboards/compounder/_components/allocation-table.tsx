@@ -33,7 +33,9 @@ export function AllocationTable({ entries }: { entries: Entry[] }) {
     <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur-sm">
       <div className="flex items-center gap-2 border-b border-border/50 px-5 py-4">
         <TrendingUp className="size-4 text-primary" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Running Allocations</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider">
+          Running Allocations
+        </h3>
         <span className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-data text-primary">
           {entries.length}
         </span>
@@ -67,7 +69,9 @@ export function AllocationTable({ entries }: { entries: Entry[] }) {
               >
                 <TableCell>
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-xs font-semibold">{e.name}</span>
+                    <span className="font-mono text-xs font-semibold">
+                      {e.name}
+                    </span>
                     {/* allocation bar */}
                     <div className="h-1 w-24 rounded-full bg-border/40">
                       <div
@@ -75,7 +79,7 @@ export function AllocationTable({ entries }: { entries: Entry[] }) {
                           "h-full rounded-full",
                           e.profitable
                             ? "bg-[hsl(185_100%_42%)]"
-                            : "bg-muted-foreground/40",
+                            : "bg-muted-foreground/40"
                         )}
                         style={{ width: `${(e.size_usd / maxSize) * 100}%` }}
                       />
@@ -89,7 +93,7 @@ export function AllocationTable({ entries }: { entries: Entry[] }) {
                       "font-data text-xs",
                       e.size_usd > 500
                         ? "border-[hsl(185_100%_42%/0.4)] bg-[hsl(185_100%_42%/0.1)] text-[hsl(185_100%_42%)]"
-                        : "text-muted-foreground",
+                        : "text-muted-foreground"
                     )}
                   >
                     ${e.size_usd.toLocaleString()}
@@ -98,7 +102,11 @@ export function AllocationTable({ entries }: { entries: Entry[] }) {
                 <TableCell
                   className={cn(
                     "text-right font-data text-sm font-semibold",
-                    e.total_pnl > 0 ? "text-[hsl(185_100%_42%)]" : e.total_pnl < 0 ? "text-destructive" : "text-muted-foreground",
+                    e.total_pnl > 0
+                      ? "text-[hsl(185_100%_42%)]"
+                      : e.total_pnl < 0
+                        ? "text-destructive"
+                        : "text-muted-foreground"
                   )}
                 >
                   {e.total_pnl >= 0 ? "+" : ""}
